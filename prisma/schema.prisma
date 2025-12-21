@@ -1,0 +1,168 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id            String    @id @default(uuid())
+  productName   String
+  productCode   String? // optional product code
+  inShop        Int       @default(0)
+  inStore       Int       @default(0)
+  sellingPrice  Int       @default(0)
+  buyingPrice   Int       @default(0)
+  paymentStatus String    @default("paid")
+  productImage  String? // optional image URL or path
+  category      String // required
+  brand         String // required
+  unit          String // required, e.g., kg, pcs
+  status        String?   @default("active") // optional, default to active
+  minStock      Int? // optional
+  maxStock      Int? // optional
+  createdAt     DateTime  @default(now())
+  expiredAt     DateTime?
+  paidWith      Json?
+
+  sales      Sale[]       @relation("ProductSales")
+  sentToShop SentToShop[] @relation("ProductSent")
+  purchases  Purchase[]
+}
+
+model BankInfo {
+  id        String   @id @default(uuid())
+  bankName  String
+  accountNo String
+  createdAt DateTime @default(now())
+}
+
+model BankTransaction {
+  id        String   @id @default(uuid())
+  type      String
+  bankName  Json?
+  createdAt DateTime @default(now())
+}
+
+model Expense {
+  id            String   @id @default(uuid())
+  title         String
+  amount        Float
+  note          String   @default("")
+  paymentMethod String
+  createdAt     DateTime @default(now())
+}
+
+model Purchase {
+  id String @id @default(uuid())
+
+  productId       String?
+  product         Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName     String
+  quantity        Int
+  purchasingPrice Float
+  supplierName    String    @default("")
+  supplierPhone   String    @default("")
+  date            DateTime
+  sellingPrice    Int
+  paidWith        Json?
+  paymentStatus   String    @default("paid")
+  createdAt       DateTime  @default(now())
+  payment         Payment[] @relation("CreditPurchase")
+}
+
+model Sale {
+  id            String    @id @default(uuid())
+  productId     String?
+  productName   String
+  quantitySold  Int
+  sellingPrice  Float
+  paidWith      Json?
+  customerName  String    @default("")
+  customerPhone String?   @default("")
+  plateNo       String    @default("")
+  address       String    @default("")
+  paymentStatus String    @default("paid")
+  saleSource    String
+  date          DateTime
+  createdAt     DateTime  @default(now())
+  payment       Payment[] @relation("CreditSell")
+
+  // 👇 Set relation name and match with StoreProduct
+  shopProduct Product? @relation("ProductSales", fields: [productId], references: [id], onDelete: SetNull)
+}
+
+model SentToShop {
+  id           String   @id @default(uuid())
+  productId    String?
+  productName  String
+  quantitySent Int
+  sellingPrice Float
+  buyingPrice  Float
+  date         DateTime
+  createdAt    DateTime @default(now())
+
+  // 👇 Set relation name and match with StoreProduct
+  storeProduct Product? @relation("ProductSent", fields: [productId], references: [id], onDelete: SetNull)
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String
+  phone     String   @unique
+  password  String // stored as plain text (NOT recommended for prod)
+  role      String   @default("user") // role: admin, user, etc.
+  createdAt DateTime @default(now())
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  amount          String
+  amountRemaining String
+  purchaseId      String?
+  saleId          String?
+  note            String   @default("")
+  paidWith        Json?
+  createdAt       DateTime @default(now())
+
+  creditPurchse Purchase? @relation("CreditPurchase", fields: [purchaseId], references: [id])
+  creditSell    Sale?     @relation("CreditSell", fields: [saleId], references: [id])
+}
+
+model CashBook {
+  id        String   @id @default(uuid())
+  title     String // Book title (e.g. Tuba, Ismail Somali)
+  note      String? // optional description
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  transactions CashTransaction[]
+}
+
+model CashTransaction {
+  id               String          @id @default(uuid())
+  type             TransactionType // CASH_IN or CASH_OUT
+  transactionTitle String
+  amount           Float
+  remark           String? // e.g. "CBE", "200*15*169"
+  balanceAfter     Float // running balance after transaction
+  createdAt        DateTime        @default(now())
+  cashBookUser     String? // optional: person responsible for entry
+  // Relations
+  cashBook         CashBook        @relation(fields: [cashBookId], references: [id], onDelete: Cascade)
+  cashBookId       String
+}
+
+enum TransactionType {
+  CASH_IN
+  CASH_OUT
+}

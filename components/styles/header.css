@@ -1,0 +1,172 @@
+.header-container {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: 200px;
+  height: 100vh;
+  justify-content: space-between;
+  border-radius: 3px;
+  z-index: 1000;
+  border-right: 1px solid #999;
+}
+
+.header-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 15px 5px;
+  border-top: 1px solid #eee;
+}
+
+.header-top img {
+  width: 40px;
+  height: auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 5px;
+  align-items: center;
+  /* justify-content: center; */
+  /* border-right: 1px solid #eaeaea; */
+  /* top: 20px;  */
+  /* padding-top: 100px; */
+  height: 100vh; /* full viewport height */
+  overflow-y: auto;
+  z-index: 1100;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  padding: 10px 0px;
+}
+.header::-webkit-scrollbar {
+  width: 6px;
+}
+
+.header-link {
+  /* background-color: #f9f7f7; */
+  padding: 8.5px 13px;
+  width: 190px;
+  border-radius: 5px;
+  transition: all 0.3s;
+  font-size: 15px;
+}
+.header-link:hover {
+  font-weight: 700;
+}
+.active-link {
+  /* border: 1px solid #aaa9a9; */
+  /* background-color: #faf7f7; */
+  font-weight: 900;
+  font-size: 18px;
+}
+.menu-icon {
+  display: none;
+}
+.product-menu {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  width: 190px;
+  border-radius: 5px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  padding-left: 5px;
+  transition: all 0.3s;
+}
+.dropdown-link {
+  padding: 5px;
+  width: 150px;
+  border-radius: 5px;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px); /* this blurs everything behind */
+  -webkit-backdrop-filter: blur(6px); /* for Safari */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* make sure it's above the table headers */
+}
+.modalContent {
+  background: white;
+  padding: 0.8rem 1.5rem;
+  overflow-y: auto;
+  border-radius: 8px;
+  text-align: center;
+  width: 310px;
+  max-height: 80vh;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.modalActions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+.cancelButton,
+.confirmButton {
+  margin: 1rem;
+  background-color: #f44336;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  float: right;
+}
+.confirmButton {
+  background-color: #666;
+  float: left;
+}
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #eaeaea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (max-width: 750px) {
+  .header-container {
+    display: none;
+  }
+  .visible-header {
+    display: flex;
+    z-index: 1000;
+  }
+  .menu-icon {
+    display: block;
+  }
+}
