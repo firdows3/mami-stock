@@ -768,7 +768,7 @@ export default function Home() {
             <h1 className={styles.pageTitle}>Add New Product</h1>
 
             {forms.map((form, index) => (
-              <div style={{ border: "1px solid gray", padding: 20 }}>
+              <di key={index} style={{ border: "1px solid gray", padding: 20 }}>
                 {index > 0 && (
                   <div
                     style={{
