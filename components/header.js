@@ -140,21 +140,22 @@ export default function Header() {
           {/* Admin full menu */}
           {role === "admin" && (
             <>
-              <div className="product-menu">
-                <Link
-                  className={`header-link ${
-                    pathname === "/" ||
-                    pathname === "/shop" ||
-                    pathname === "/store"
-                      ? "active-link"
-                      : ""
-                  }`}
-                  href="/"
-                  onClick={() => setOpenMenu(false)}
-                >
-                  {/* <MdInventory />  */}
-                  Product
-                </Link>
+              <Link
+                className={`header-link ${
+                  pathname === "/"
+                    ? // ||
+                      // pathname === "/shop" ||
+                      // pathname === "/store"
+                      "active-link"
+                    : ""
+                }`}
+                href="/"
+                onClick={() => setOpenMenu(false)}
+              >
+                {/* <MdInventory />  */}
+                Product
+              </Link>
+              {/* <div className="product-menu">
                 <div
                   className="dropdown-toggle"
                   onClick={() => setOpenProduct(!openProduct)}
@@ -166,22 +167,21 @@ export default function Header() {
                     <MdKeyboardArrowDown />
                   )}
                 </div>
-              </div>
-              {openProduct && (
+              </div> */}
+              <Link
+                className={`header-link ${
+                  pathname === "/shop" ? "active-link" : ""
+                }`}
+                href="/shop"
+                onClick={() => {
+                  setOpenProduct(false);
+                  setOpenMenu(false);
+                }}
+              >
+                Shop
+              </Link>
+              {/* {openProduct && (
                 <div className="dropdown">
-                  <Link
-                    className={`header-link dropdown-link ${
-                      pathname === "/shop" ? "active-link" : ""
-                    }`}
-                    href="/shop"
-                    onClick={() => {
-                      setOpenProduct(false);
-                      setOpenMenu(false);
-                    }}
-                  >
-                    {/* <MdStore />  */}
-                    Shop
-                  </Link>
 
                   <Link
                     className={`header-link dropdown-link ${
@@ -193,35 +193,29 @@ export default function Header() {
                       setOpenMenu(false);
                     }}
                   >
-                    {/* <FaStore />  */}
                     Store
                   </Link>
                 </div>
-              )}
+              )} */}
               <div className="product-menu">
-                <div
+                <Link
                   className={`header-link ${
-                    pathname === "/sales" || pathname === "/storeSales"
-                      ? "active-link"
-                      : ""
+                    pathname === "/sales" ? "active-link" : ""
                   }`}
-                  //   pathname === "/sales" ? "active-link" : ""
-                  // }`}
-                  // href="/sales"
-                  // onClick={() => setOpenMenu(false)}
+                  href="/sales"
+                  onClick={() => setOpenMenu(false)}
                 >
-                  {/* <FaShoppingCart />  */}
                   Sales
-                </div>
-                <div
+                </Link>
+                {/* <div
                   className="dropdown-toggle"
                   onClick={() => setOpenSales(!openSales)}
                   style={{ fontSize: "20px" }}
                 >
                   {openSales ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-                </div>
+                </div> */}
               </div>
-              {openSales && (
+              {/* {openSales && (
                 <div className="dropdown">
                   <Link
                     className={`header-link dropdown-link ${
@@ -230,7 +224,6 @@ export default function Header() {
                     href="/sales"
                     onClick={() => setOpenMenu(false)}
                   >
-                    {/* <FaShoppingCart />  */}
                     Shop
                   </Link>
                   <Link
@@ -240,21 +233,19 @@ export default function Header() {
                     href="/storeSales"
                     onClick={() => setOpenMenu(false)}
                   >
-                    {/* <FaShoppingCart />  */}
                     Store
                   </Link>
                 </div>
-              )}
-              <Link
+              )} */}
+              {/* <Link
                 className={`header-link ${
                   pathname === "/sentToShop" ? "active-link" : ""
                 }`}
                 href="/sentToShop"
                 onClick={() => setOpenMenu(false)}
               >
-                {/* <FaShoppingCart /> <HiArrowRight />  */}
                 Send To Shop
-              </Link>
+              </Link> */}
               <Link
                 className={`header-link ${
                   pathname === "/purchases" ? "active-link" : ""
