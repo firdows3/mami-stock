@@ -181,7 +181,7 @@ export default function Header() {
                 Shop 235
               </Link>
               <Link
-                className={`header-link dropdown-link ${
+                className={`header-link ${
                   pathname === "/store" ? "active-link" : ""
                 }`}
                 href="/store"
