@@ -218,7 +218,7 @@ export default function Home() {
   };
 
   const totalValue = filteredProducts.reduce(
-    (acc, curr) => acc + (curr.inStore + curr.inShop) * curr.buyingPrice,
+    (acc, curr) => acc + (curr.inStore + curr.inShop),
     0
   );
 
@@ -1065,7 +1065,7 @@ export default function Home() {
       )}
       {/* </AnimatePresence> */}
       <div style={{ fontWeight: "900", textAlign: "right", margin: 10 }}>
-        Total Money in Stock: {totalValue.toLocaleString() + " ETB"}
+        Total items in Stock: {totalValue.toLocaleString() + " ETB"}
       </div>
       <div className={styles.tableContainer}>
         {allProducts.length > 0 && (
@@ -1281,7 +1281,7 @@ export default function Home() {
 
                   {/* Total Selling Price */}
                   <td>
-                    {product.inShop && product.inStore && product.sellingPrice
+                    {(product.inShop || product.inStore) && product.sellingPrice
                       ? (
                           (product.inShop + product.inStore) *
                           product.sellingPrice
