@@ -19,6 +19,7 @@ model Product {
   productCode   String? // optional product code
   inShop        Int       @default(0)
   inStore       Int       @default(0)
+  orgQty        Int?      @default(0)
   sellingPrice  Int       @default(0)
   buyingPrice   Int       @default(0)
   paymentStatus String    @default("paid")

@@ -1079,7 +1079,7 @@ export default function Home() {
                 <th>Brand</th>
                 <th>Unit</th>
                 <th>Status</th>
-                <th>Stock Status</th>
+                <th>Original Quantity</th>
                 <th>Quantity</th>
                 <th>Buying Price</th>
                 <th>Selling Price</th>
@@ -1241,28 +1241,7 @@ export default function Home() {
                       product.unit || "--"
                     )}
                   </td>
-
-                  {/* Status */}
-                  <td>
-                    {editingRowId === product.id ? (
-                      <select
-                        value={editValues.status}
-                        onChange={(e) =>
-                          setEditValues((prev) => ({
-                            ...prev,
-                            status: e.target.value,
-                          }))
-                        }
-                        className={styles.editInput}
-                      >
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                      </select>
-                    ) : (
-                      product.status
-                    )}
-                  </td>
-
+                  <td>{product.orgQty || "--"}</td>
                   {/* Min Stock */}
                   <td>
                     {(() => {

@@ -431,11 +431,11 @@
 
 .modalContent {
   background: white;
-  padding: 1.5rem;
+  padding: 1.1rem;
   overflow-y: auto;
   border-radius: 8px;
   text-align: center;
-  width: 280px;
+  width: 310px;
   max-height: 80vh;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */

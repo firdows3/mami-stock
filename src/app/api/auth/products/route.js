@@ -58,6 +58,7 @@ export async function POST(req) {
         productName,
         inShop,
         inStore,
+        orgQty: inShop + inStore,
         sellingPrice,
         buyingPrice,
         paymentStatus,
@@ -116,6 +117,7 @@ export async function PUT(req) {
       inStore: formData.get("inStore")
         ? Number(formData.get("inStore"))
         : undefined,
+      orgQty: formData.get("inShop") + formData.get("inStore"),
       sellingPrice: formData.get("sellingPrice")
         ? Number(formData.get("sellingPrice"))
         : undefined,
