@@ -466,12 +466,12 @@ export default function Shop() {
                   </div>
                   <div>
                     <p>
-                      <strong>In Shop:</strong>{" "}
+                      <strong>In Shop 235:</strong>{" "}
                       {allProducts.find((p) => p.id === sellingRowId)?.inShop ||
                         "0"}
                     </p>
                     <p>
-                      <strong>In Store:</strong>{" "}
+                      <strong>In Shop 116:</strong>{" "}
                       {allProducts.find((p) => p.id === sellingRowId)
                         ?.inStore || "0"}
                     </p>
@@ -1166,7 +1166,7 @@ export default function Shop() {
                   </div> */}
                   <div>
                     <p>
-                      <strong>Quantity in Store:</strong>{" "}
+                      <strong>Quantity in Shop 116:</strong>{" "}
                       {allProducts.find((p) => p.id === sendingRowId)
                         ?.inStore || "0"}
                     </p>

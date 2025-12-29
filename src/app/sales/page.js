@@ -363,8 +363,8 @@ export default function Home() {
                                   required
                                 >
                                   <option value="">Select Sales Source</option>
-                                  <option value="shop">Shop</option>
-                                  <option value="store">Store</option>
+                                  <option value="shop 235">Shop 235</option>
+                                  <option value="shop 116">Shop 116</option>
                                 </select>
                               </td>
                               <td>

@@ -73,30 +73,30 @@ export async function POST(req) {
       );
     }
 
-    if (saleSource === "shop" && product.inShop === 0) {
+    if (saleSource === "shop 235" && product.inShop === 0) {
       return NextResponse.json(
         { message: "Product is out of stock in shop" },
         { status: 400 }
       );
     }
 
-    if (saleSource === "store" && product.inStore === 0) {
+    if (saleSource === "sshop 116" && product.inStore === 0) {
       return NextResponse.json(
-        { message: "Product is out of stock in store" },
+        { message: "Product is out of stock in Shop 116" },
         { status: 400 }
       );
     }
 
-    if (saleSource === "shop" && Number(quantitySold) > product.inShop) {
+    if (saleSource === "shop 235" && Number(quantitySold) > product.inShop) {
       return NextResponse.json(
-        { message: `Only ${product.inShop} items available in shop.` },
+        { message: `Only ${product.inShop} items available in shop 235.` },
         { status: 400 }
       );
     }
 
-    if (saleSource === "store" && Number(quantitySold) > product.inStore) {
+    if (saleSource === "shop 116" && Number(quantitySold) > product.inStore) {
       return NextResponse.json(
-        { message: `Only ${product.inStore} items available in store.` },
+        { message: `Only ${product.inStore} items available in Shop 116.` },
         { status: 400 }
       );
     }
@@ -148,7 +148,7 @@ export async function POST(req) {
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
       data:
-        saleSource === "shop"
+        saleSource === "shop 235"
           ? { inShop: { decrement: Number(quantitySold) } }
           : { inStore: { decrement: Number(quantitySold) } }, // store sale
     });
@@ -176,7 +176,7 @@ ${sell.paymentStatus === "paid" && `Paid With: ${sell.paidWith.method}`}`
       );
     }
 
-    if (saleSource === "shop" && product.inShop === 0) {
+    if (saleSource === "shop 235" && product.inShop === 0) {
       return NextResponse.json(
         { message: "Product is out of stock in shop" },
         { status: 400 }
@@ -239,23 +239,23 @@ export async function PUT(req) {
       );
     }
 
-    if (saleSource === "store" && product.inStore === 0) {
+    if (saleSource === "shop 116" && product.inStore === 0) {
       return NextResponse.json(
-        { message: "Product is out of stock in store" },
+        { message: "Product is out of stock in Shop 116" },
         { status: 400 }
       );
     }
 
-    if (saleSource === "shop" && Number(quantitySold) > product.inShop) {
+    if (saleSource === "shop 235" && Number(quantitySold) > product.inShop) {
       return NextResponse.json(
-        { message: `Only ${product.inShop} items available in shop.` },
+        { message: `Only ${product.inShop} items available in shop 235.` },
         { status: 400 }
       );
     }
 
-    if (saleSource === "store" && Number(quantitySold) > product.inStore) {
+    if (saleSource === "shop 116" && Number(quantitySold) > product.inStore) {
       return NextResponse.json(
-        { message: `Only ${product.inStore} items available in store.` },
+        { message: `Only ${product.inStore} items available in Shop 116.` },
         { status: 400 }
       );
     }
@@ -298,7 +298,7 @@ export async function PUT(req) {
     await prisma.product.update({
       where: { id: productId },
       data:
-        saleSource === "shop"
+        saleSource === "shop 235"
           ? { inShop: { decrement: Number(quantitySold) } }
           : { inStore: { decrement: Number(quantitySold) } },
     });
@@ -350,7 +350,7 @@ export async function DELETE(req) {
     await prisma.product.update({
       where: { id: sale.productId },
       data:
-        sale.saleSource === "shop"
+        sale.saleSource === "shop 235"
           ? { inShop: { increment: sale.quantitySold } }
           : { inStore: { increment: sale.quantitySold } },
     });

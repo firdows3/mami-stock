@@ -869,10 +869,10 @@ export default function Home() {
                   </select>
                   {/* Shop & Store Quantity */}
                   <div>
-                    <label>In Shop: </label>
+                    <label>In Shop 235: </label>
                     <input
                       type="number"
-                      placeholder="Shop Quantity"
+                      placeholder="Shop 235 Quantity"
                       value={form.inShop || 0}
                       onChange={(e) => {
                         const updated = [...forms];
@@ -883,10 +883,10 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <label>In Store: </label>
+                    <label>In Shop 116: </label>
                     <input
                       type="number"
-                      placeholder="Store Quantity"
+                      placeholder="Shop 116 Quantity"
                       value={form.inStore || 0}
                       onChange={(e) => {
                         const updated = [...forms];

@@ -99,8 +99,8 @@ export default function ExpiredAlert() {
               <thead>
                 <tr>
                   <th>Product Name</th>
-                  <th>In shop</th>
-                  <th>In store</th>
+                  <th>In shop 235</th>
+                  <th>In Shop 116</th>
                 </tr>
               </thead>
               <tbody>
@@ -135,8 +135,8 @@ export default function ExpiredAlert() {
               <thead>
                 <tr>
                   <th>Product Name</th>
-                  <th>In shop</th>
-                  <th>In store</th>
+                  <th>In shop 235</th>
+                  <th>In Shop 116</th>
                 </tr>
               </thead>
               <tbody>

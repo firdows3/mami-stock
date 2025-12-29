@@ -178,23 +178,23 @@ export default function Header() {
                   setOpenMenu(false);
                 }}
               >
-                Shop
+                Shop 235
+              </Link>
+              <Link
+                className={`header-link dropdown-link ${
+                  pathname === "/store" ? "active-link" : ""
+                }`}
+                href="/store"
+                onClick={() => {
+                  setOpenProduct(false);
+                  setOpenMenu(false);
+                }}
+              >
+                Shop 116
               </Link>
               {/* {openProduct && (
                 <div className="dropdown">
 
-                  <Link
-                    className={`header-link dropdown-link ${
-                      pathname === "/store" ? "active-link" : ""
-                    }`}
-                    href="/store"
-                    onClick={() => {
-                      setOpenProduct(false);
-                      setOpenMenu(false);
-                    }}
-                  >
-                    Store
-                  </Link>
                 </div>
               )} */}
               <div className="product-menu">
@@ -226,17 +226,17 @@ export default function Header() {
                   >
                     Shop
                   </Link>
-                  <Link
-                    className={`header-link dropdown-link ${
-                      pathname === "/storeSales" ? "active-link" : ""
-                    }`}
-                    href="/storeSales"
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    Store
-                  </Link>
-                </div>
-              )} */}
+                  </div>
+                  )} */}
+              {/* <Link
+                className={`header-link ${
+                  pathname === "/storeSales" ? "active-link" : ""
+                }`}
+                href="/storeSales"
+                onClick={() => setOpenMenu(false)}
+              >
+                Shop 116 Sales
+              </Link> */}
               {/* <Link
                 className={`header-link ${
                   pathname === "/sentToShop" ? "active-link" : ""

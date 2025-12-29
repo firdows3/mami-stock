@@ -45,7 +45,7 @@ export default function StoreSales() {
       try {
         const response = await axios.get("/api/auth/sell");
         let storeSales = response.data.filter(
-          (sales) => sales.saleSource === "store"
+          (sales) => sales.saleSource === "shop 116"
         );
         setSalesData(storeSales);
       } catch (err) {

@@ -169,7 +169,7 @@ export default function Store() {
       </div>
       {role == "admin" && (
         <div style={{ fontWeight: "900", textAlign: "right", margin: 10 }}>
-          Total Selling Price in Store: {totalValue.toLocaleString()} ETB
+          Total Selling Price in Shop 116: {totalValue.toLocaleString()} ETB
         </div>
       )}
       <div className={styles.tableContainer}>
