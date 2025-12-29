@@ -1078,8 +1078,8 @@ export default function Home() {
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Unit</th>
-                <th>Status</th>
                 <th>Original Quantity</th>
+                <th>Stock Status</th>
                 <th>Quantity</th>
                 <th>Buying Price</th>
                 <th>Selling Price</th>
@@ -1242,6 +1242,7 @@ export default function Home() {
                     )}
                   </td>
                   <td>{product.orgQty || "--"}</td>
+
                   {/* Min Stock */}
                   <td>
                     {(() => {
