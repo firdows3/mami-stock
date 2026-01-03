@@ -138,23 +138,28 @@ export default function Header() {
 
         <div className="header">
           {/* Admin full menu */}
+          {(role === "admin" ||
+            role === "shop 235" ||
+            role === "shop 116" ||
+            role === "shop siti") && (
+            <Link
+              className={`header-link ${
+                pathname === "/"
+                  ? // ||
+                    // pathname === "/shop" ||
+                    // pathname === "/store"
+                    "active-link"
+                  : ""
+              }`}
+              href="/"
+              onClick={() => setOpenMenu(false)}
+            >
+              {/* <MdInventory />  */}
+              Product
+            </Link>
+          )}
           {role === "admin" && (
             <>
-              <Link
-                className={`header-link ${
-                  pathname === "/"
-                    ? // ||
-                      // pathname === "/shop" ||
-                      // pathname === "/store"
-                      "active-link"
-                    : ""
-                }`}
-                href="/"
-                onClick={() => setOpenMenu(false)}
-              >
-                {/* <MdInventory />  */}
-                Product
-              </Link>
               {/* <div className="product-menu">
                 <div
                   className="dropdown-toggle"
@@ -168,7 +173,7 @@ export default function Header() {
                   )}
                 </div>
               </div> */}
-              <Link
+              {/* <Link
                 className={`header-link ${
                   pathname === "/shop" ? "active-link" : ""
                 }`}
@@ -179,8 +184,8 @@ export default function Header() {
                 }}
               >
                 Shop 235
-              </Link>
-              <Link
+              </Link> */}
+              {/* <Link
                 className={`header-link ${
                   pathname === "/store" ? "active-link" : ""
                 }`}
@@ -191,7 +196,7 @@ export default function Header() {
                 }}
               >
                 Shop 116
-              </Link>
+              </Link> */}
               {/* {openProduct && (
                 <div className="dropdown">
 
