@@ -206,8 +206,9 @@ export default function Home() {
               >
                 <option value="">Select Role</option>
                 <option value="admin">Admin</option>
-                <option value="shopper">Shopper</option>
-                <option value="storekeeper">Storekeeper</option>
+                <option value="shop 235">Shopper for 235r</option>
+                <option value="shop 116">Shooper for 116</option>
+                <option value="shop siti">Shooper Siti</option>
               </select>
 
               <button

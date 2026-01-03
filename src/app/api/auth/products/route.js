@@ -32,8 +32,9 @@ export async function POST(req) {
 
     // Required fields
     const productName = formData.get("productName")?.toString() || "";
-    const inShop = Number(formData.get("inShop") || 0);
-    const inStore = Number(formData.get("inStore") || 0);
+    const inShop116 = Number(formData.get("inShop116") || 0);
+    const inShop235 = Number(formData.get("inShop235") || 0);
+    const inShopSiti = Number(formData.get("inShopSiti") || 0);
     const sellingPrice = Number(formData.get("sellingPrice") || 0);
     const buyingPrice = Number(formData.get("buyingPrice") || 0);
     const paymentStatus = formData.get("paymentStatus")?.toString() || "paid";
@@ -56,9 +57,10 @@ export async function POST(req) {
     const newProduct = await prisma.product.create({
       data: {
         productName,
-        inShop,
-        inStore,
-        orgQty: inShop + inStore,
+        inShop235,
+        inShop116,
+        inShopSiti,
+        orgQty: inShop235 + inShop116 + inShopSiti,
         sellingPrice,
         buyingPrice,
         paymentStatus,
@@ -80,7 +82,7 @@ export async function POST(req) {
       data: {
         productId: newProduct.id,
         productName,
-        quantity: inShop + inStore,
+        quantity: inShop235 + inShop116 + inShopSiti,
         purchasingPrice: buyingPrice,
         sellingPrice,
         paymentStatus,
@@ -111,13 +113,19 @@ export async function PUT(req) {
     // Required and optional fields
     const updateData = {
       productName: formData.get("productName")?.toString(),
-      inShop: formData.get("inShop")
-        ? Number(formData.get("inShop"))
+      inShop235: formData.get("inShop235")
+        ? Number(formData.get("inShop235"))
         : undefined,
-      inStore: formData.get("inStore")
-        ? Number(formData.get("inStore"))
+      inShop116: formData.get("inShop116")
+        ? Number(formData.get("inShop116"))
         : undefined,
-      orgQty: formData.get("inShop") + formData.get("inStore"),
+      inShopSiti: formData.get("inShopSiti")
+        ? Number(formData.get("inShopSiti"))
+        : undefined,
+      orgQty:
+        formData.get("inShop235") +
+        formData.get("inShop116") +
+        formData.get("inShopSiti"),
       sellingPrice: formData.get("sellingPrice")
         ? Number(formData.get("sellingPrice"))
         : undefined,

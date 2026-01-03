@@ -31,12 +31,14 @@ export default function Home() {
   const [loadingPage, setLoadingPage] = useState(true);
   const [editValues, setEditValues] = useState({
     productName: "",
-    inShop: "",
-    inStore: "",
+    inShop235: "",
+    inShop116: "",
+    inShopSiti: "",
     buyingPrice: "",
     sellingPrice: "",
   });
   // State
+  const [selectedShop, setSelectedShop] = useState("all");
 
   const [isPurchaseMode, setIsPurchaseMode] = useState(false);
   const [purchasingRowId, setPurchasingRowId] = useState("");
@@ -44,8 +46,9 @@ export default function Home() {
   const [forms, setForms] = useState([
     {
       productName: "",
-      inShop: "",
-      inStore: "",
+      inShop235: "",
+      inShop116: "",
+      inShopSiti: "",
       buyingPrice: "",
       sellingPrice: "",
       paymentStatus: "",
@@ -101,16 +104,22 @@ export default function Home() {
 
   const filteredProducts = allProducts.filter((p) => {
     const matchesSearch =
-      (p.productName &&
-        p.productName.toLowerCase().includes(search.toLowerCase())) ||
-      p.status.toLowerCase().includes(search.toLowerCase()) ||
-      p.brand.toLowerCase().includes(search.toLowerCase());
+      p.productName?.toLowerCase().includes(search.toLowerCase()) ||
+      p.brand?.toLowerCase().includes(search.toLowerCase());
 
     const matchesCategory =
       selectedCategory === "all" || p.category === selectedCategory;
 
-    return matchesSearch && matchesCategory;
+    let shopQty = 0;
+    if (selectedShop === "shop235") shopQty = p.inShop235;
+    if (selectedShop === "shop116") shopQty = p.inShop116;
+    if (selectedShop === "shopsiti") shopQty = p.inShopSiti; // ← add field in DB
+    if (selectedShop === "all")
+      shopQty = (p.inShop235 || 0) + (p.inShop116 || 0) + (p.inShopSiti || 0);
+
+    return matchesSearch && matchesCategory && shopQty > 0;
   });
+
   const categories = [
     "all",
     ...new Set(allProducts.map((p) => p.category).filter(Boolean)),
@@ -120,7 +129,22 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const startIndex = (currentPage - 1) * rowsToShow;
   const endIndex = startIndex + rowsToShow;
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+  const shopQtyMap = {
+    "shop 235": "inShop235",
+    "shop 116": "inShop116",
+    "shop siti": "inShopSiti", // make sure this exists in DB
+  };
+
+  const roleFilteredProducts = filteredProducts.filter((p) => {
+    const qtyField = shopQtyMap[role];
+
+    // safety check
+    if (!qtyField) return false;
+
+    return (p[qtyField] || 0) > 0;
+  });
+
+  const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
   const [added, setAdded] = useState("");
   const [bankData, setBankData] = useState([]);
   useEffect(() => {
@@ -156,8 +180,9 @@ export default function Home() {
 
         // Required fields
         formData.append("productName", form.productName);
-        formData.append("inShop", form.inShop);
-        formData.append("inStore", form.inStore);
+        formData.append("inShop235", form.inShop235);
+        formData.append("inShop116", form.inShop116);
+        formData.append("inShopSiti", form.inShopSiti);
         formData.append("buyingPrice", form.buyingPrice);
         formData.append("sellingPrice", form.sellingPrice);
         formData.append("paymentStatus", form.paymentStatus);
@@ -189,8 +214,9 @@ export default function Home() {
           category: "",
           brand: "",
           unit: "",
-          inShop: 0,
-          inStore: 0,
+          inShop235: 0,
+          inShop116: 0,
+          inShopSiti: 0,
           buyingPrice: 0,
           sellingPrice: 0,
           status: "active",
@@ -217,8 +243,27 @@ export default function Home() {
     }
   };
 
+  const [user, setUser] = useState("");
+  const [role, setRole] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        setUser(data.username);
+        setRole(data.role);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        setUser("");
+        setRole("");
+      }
+    };
+
+    fetchUser();
+  }, [pathname, router]);
   const totalValue = filteredProducts.reduce(
-    (acc, curr) => acc + (curr.inStore + curr.inShop),
+    (acc, curr) => acc + (curr.inShop116 + curr.inShop235 + curr.inShopSiti),
     0
   );
 
@@ -230,8 +275,9 @@ export default function Home() {
     const formData = new FormData();
     formData.append("productName", editValues?.productName);
     formData.append("id", editingRowId);
-    formData.append("inShop", editValues?.inShop);
-    formData.append("inStore", editValues?.inStore);
+    formData.append("inShop235", editValues?.inShop235);
+    formData.append("inShop116", editValues?.inShop116);
+    formData.append("inShopSiti", editValues?.inShopSiti);
     formData.append("sellingPrice", editValues?.sellingPrice);
     formData.append("buyingPrice", editValues?.buyingPrice);
     formData.append("paymentStatus", paymentStatus);
@@ -363,6 +409,17 @@ export default function Home() {
           className={styles.topBar}
           style={{ display: "flex", gap: "10px", alignItems: "center" }}
         >
+          <select
+            value={selectedShop}
+            onChange={(e) => setSelectedShop(e.target.value)}
+            className={styles.categorySelect}
+          >
+            <option value="all">All Shops</option>
+            <option value="shop235">Shop 235</option>
+            <option value="shop116">Shop 116</option>
+            <option value="shopsiti">Shop Siti</option>
+          </select>
+
           <div className={styles.filterBar}>
             <select
               value={selectedCategory}
@@ -749,8 +806,9 @@ export default function Home() {
                     category: "",
                     brand: "",
                     unit: "",
-                    inShop: 0,
-                    inStore: 0,
+                    inShop235: 0,
+                    inShop116: 0,
+                    inShopSiti: 0,
                     buyingPrice: 0,
                     sellingPrice: 0,
                     status: "active",
@@ -873,10 +931,10 @@ export default function Home() {
                     <input
                       type="number"
                       placeholder="Shop 235 Quantity"
-                      value={form.inShop || 0}
+                      value={form.inShop235 || 0}
                       onChange={(e) => {
                         const updated = [...forms];
-                        updated[index].inShop = e.target.value;
+                        updated[index].inShop235 = e.target.value;
                         setForms(updated);
                       }}
                       style={{ width: 100 }}
@@ -887,10 +945,24 @@ export default function Home() {
                     <input
                       type="number"
                       placeholder="Shop 116 Quantity"
-                      value={form.inStore || 0}
+                      value={form.inShop116 || 0}
                       onChange={(e) => {
                         const updated = [...forms];
-                        updated[index].inStore = e.target.value;
+                        updated[index].inShop116 = e.target.value;
+                        setForms(updated);
+                      }}
+                      style={{ width: 100 }}
+                    />
+                  </div>
+                  <div>
+                    <label>In Shop Siti: </label>
+                    <input
+                      type="number"
+                      placeholder="Shop 116 Quantity"
+                      value={form.inShopSiti || 0}
+                      onChange={(e) => {
+                        const updated = [...forms];
+                        updated[index].inShopSiti = e.target.value;
                         setForms(updated);
                       }}
                       style={{ width: 100 }}
@@ -1042,8 +1114,9 @@ export default function Home() {
                     category: "",
                     brand: "",
                     unit: "",
-                    inShop: 0,
-                    inStore: 0,
+                    inShop235: 0,
+                    inShop116: 0,
+                    inShopSiti: 0,
                     buyingPrice: 0,
                     sellingPrice: 0,
                     status: "active",
@@ -1065,7 +1138,7 @@ export default function Home() {
       )}
       {/* </AnimatePresence> */}
       <div style={{ fontWeight: "900", textAlign: "right", margin: 10 }}>
-        Total items in Stock: {totalValue.toLocaleString() + " ETB"}
+        Total items in Stock: {totalValue.toLocaleString() + " Items"}
       </div>
       <div className={styles.tableContainer}>
         {allProducts.length > 0 && (
@@ -1078,11 +1151,15 @@ export default function Home() {
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Unit</th>
-                <th>Original Quantity</th>
-                <th>Stock Status</th>
+                {role === "admin" && (
+                  <>
+                    <th>Original Quantity</th>
+                    <th>Stock Status</th>
+                  </>
+                )}
                 <th>Quantity</th>
-                <th>Buying Price</th>
-                <th>Selling Price</th>
+                {role === "admin" && <th>Buying Price</th>}
+                {role === "admin" && <th>Selling Price</th>}
               </tr>
             </thead>
             <tbody style={{ textAlign: "center" }}>
@@ -1094,8 +1171,9 @@ export default function Home() {
                       setEditingRowId(product.id);
                       setEditValues({
                         productName: product.productName,
-                        inShop: product.inShop,
-                        inStore: product.inStore,
+                        inShop235: product.inShop235,
+                        inShop116: product.inShop116,
+                        inShopSiti: product.inShopSiti,
                         buyingPrice: product.buyingPrice,
                         sellingPrice: product.sellingPrice,
                         productCode: product.productCode || "",
@@ -1241,53 +1319,77 @@ export default function Home() {
                       product.unit || "--"
                     )}
                   </td>
-                  <td>{product.orgQty || "--"}</td>
+                  {role === "admin" && <td>{product.orgQty || "--"}</td>}
 
                   {/* Min Stock */}
-                  <td>
-                    {(() => {
-                      const totalStock =
-                        (product.inShop || 0) + (product.inStore || 0);
+                  {role === "admin" && (
+                    <td>
+                      {(() => {
+                        const totalStock =
+                          (product.inShop235 || 0) +
+                          (product.inShop116 || 0) +
+                          (product.inShopSiti || 0);
 
-                      if (totalStock === 0) {
-                        return <span className="stock out">Out of Stock</span>;
-                      }
-                      if (totalStock < product.minStock) {
-                        return <span className="stock low">Low Stock</span>;
-                      }
-                      if (totalStock > product.maxStock) {
-                        return <span className="stock over">Overstock</span>;
-                      }
-                      return <span className="stock normal">Normal</span>;
-                    })()}
-                  </td>
+                        if (totalStock === 0) {
+                          return (
+                            <span className="stock out">Out of Stock</span>
+                          );
+                        }
+                        if (totalStock < product.minStock) {
+                          return <span className="stock low">Low Stock</span>;
+                        }
+                        if (totalStock > product.maxStock) {
+                          return <span className="stock over">Overstock</span>;
+                        }
+                        return <span className="stock normal">Normal</span>;
+                      })()}
+                    </td>
+                  )}
 
-                  {/* In Shop */}
                   <td>
-                    {(
-                      (product.inShop || 0) + (product.inStore || 0)
-                    ).toLocaleString()}
+                    {selectedShop === "shop235" ||
+                      (role === "shop 235" && product.inShop235)}
+                    {selectedShop === "shop116" ||
+                      (role === "shop 116" && product.inShop116)}
+                    {selectedShop === "shopsiti" ||
+                      (role === "shop siti" && product.inShopSiti)}
+                    {selectedShop === "all" &&
+                      product.inShop235 +
+                        product.inShop116 +
+                        (product.inShopSiti || 0)}
                   </td>
 
                   {/* Total Buying Price */}
-                  <td>
-                    {product.inShop && product.inStore
-                      ? (
-                          (product.inShop + product.inStore) *
-                          product.buyingPrice
-                        ).toLocaleString() + " ETB"
-                      : "--"}
-                  </td>
-
+                  {role === "admin" && (
+                    <td>
+                      {product.inShop235 &&
+                      product.inShop116 &&
+                      product.inShopSiti
+                        ? (
+                            (product.inShop235 +
+                              product.inShop116 +
+                              product.inShopSiti) *
+                            product.buyingPrice
+                          ).toLocaleString() + " ETB"
+                        : "--"}
+                    </td>
+                  )}
                   {/* Total Selling Price */}
-                  <td>
-                    {(product.inShop || product.inStore) && product.sellingPrice
-                      ? (
-                          (product.inShop + product.inStore) *
-                          product.sellingPrice
-                        ).toLocaleString() + " ETB"
-                      : "--"}
-                  </td>
+                  {role === "admin" && (
+                    <td>
+                      {(product.inShop235 ||
+                        product.inShop116 ||
+                        product.inShopSiti) &&
+                      product.sellingPrice
+                        ? (
+                            (product.inShop235 +
+                              product.inShop116 +
+                              product.inShopSiti) *
+                            product.sellingPrice
+                          ).toLocaleString() + " ETB"
+                        : "--"}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

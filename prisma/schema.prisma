@@ -17,8 +17,11 @@ model Product {
   id            String    @id @default(uuid())
   productName   String
   productCode   String? // optional product code
-  inShop        Int       @default(0)
-  inStore       Int       @default(0)
+  //  inShop         Int       @default(0)
+  //   inStore       Int       @default(0)
+  inShop235     Int       @default(0)
+  inShop116     Int       @default(0)
+  inShopSiti    Int       @default(0)
   orgQty        Int?      @default(0)
   sellingPrice  Int       @default(0)
   buyingPrice   Int       @default(0)

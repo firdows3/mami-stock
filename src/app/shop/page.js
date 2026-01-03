@@ -159,12 +159,28 @@ export default function Shop() {
   }, []);
 
   const [search, setSearch] = useState("");
-  const filteredProducts = allProducts.filter(
-    (p) =>
-      p.productName.toLowerCase().includes(search.toLowerCase()) ||
-      p.inShop.toLocaleString().includes(search.toLowerCase()) ||
-      p.sellingPrice.toLocaleString().includes(search.toLowerCase())
-  );
+  const [selectedShop, setSelectedShop] = useState("");
+  useEffect(() => {
+    if (role === "shop 235") setSelectedShop("shop235");
+    if (role === "shop 116") setSelectedShop("shop116");
+    if (role === "shop siti") setSelectedShop("shopsiti");
+  }, [role]);
+  const shopQtyMap = {
+    shop235: "inShop235",
+    shop116: "inShop116",
+    shopsiti: "inShopSiti",
+  };
+  const filteredProducts = allProducts.filter((p) => {
+    const matchesSearch = p.productName
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    if (!selectedShop) return matchesSearch;
+
+    const qtyField = shopQtyMap[selectedShop];
+    return matchesSearch && (p[qtyField] || 0) > 0;
+  });
+
   const [rowsToShow, setRowsToShow] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const startIndex = (currentPage - 1) * rowsToShow;
@@ -195,7 +211,9 @@ export default function Shop() {
   const [amountError, setAmountError] = useState("");
 
   const totalValue = filteredProducts.reduce(
-    (acc, curr) => acc + curr.inShop * curr.sellingPrice,
+    (acc, curr) =>
+      acc +
+      (curr.inShop235 + curr.inShop116 + curr.inShopSiti) * curr.sellingPrice,
     0
   );
 
@@ -423,11 +441,23 @@ export default function Shop() {
     setToast({ type, message });
     setTimeout(() => setToast({ type: "", message: "" }), 3000);
   };
+
   return (
     <div className={`${styles.mainContent} ${jura.className}`}>
       <div className={styles.home_top}>
         <h1 className={styles.pageTitle}>Manage Shop</h1>
         <div className={styles.topBar}>
+          <select
+            value={selectedShop}
+            onChange={(e) => setSelectedShop(e.target.value)}
+            className={styles.categorySelect}
+          >
+            <option value="">Select Shop</option>
+            <option value="shop235">Shop 235</option>
+            <option value="shop116">Shop 116</option>
+            <option value="shopsiti">Shop Siti</option>
+          </select>
+
           <input
             type="text"
             placeholder="Search product..."
@@ -458,24 +488,25 @@ export default function Shop() {
                   </div>
                   <div>
                     <p>
-                      <strong>Price:</strong>{" "}
-                      {allProducts
-                        .find((p) => p.id === sellingRowId)
-                        ?.sellingPrice.toLocaleString() + " ETB" || ""}
-                    </p>
-                  </div>
-                  <div>
-                    <p>
                       <strong>In Shop 235:</strong>{" "}
-                      {allProducts.find((p) => p.id === sellingRowId)?.inShop ||
-                        "0"}
+                      {allProducts.find((p) => p.id === sellingRowId)
+                        ?.inShop235 || "0"}
                     </p>
                     <p>
                       <strong>In Shop 116:</strong>{" "}
                       {allProducts.find((p) => p.id === sellingRowId)
-                        ?.inStore || "0"}
+                        ?.inShop116 || "0"}
+                    </p>
+                    <p>
+                      <strong>In Shop Siti:</strong>{" "}
+                      {allProducts.find((p) => p.id === sellingRowId)
+                        ?.inShopSiti || "0"}
                     </p>
                   </div>
+                  <td>
+                    {selectedShop &&
+                      product[shopQtyMap[selectedShop]]?.toLocaleString()}
+                  </td>
                 </div>
               </div>
             )}
@@ -853,7 +884,8 @@ export default function Shop() {
               <tr key={product.id}>
                 <td>{product.productName ? product?.productName : "--"}</td>
                 <td>
-                  {product.inShop ? product?.inShop.toLocaleString() : "--"}
+                  {selectedShop &&
+                    product[shopQtyMap[selectedShop]]?.toLocaleString()}
                 </td>
                 <td>
                   {product.sellingPrice
@@ -861,9 +893,9 @@ export default function Shop() {
                     : "--"}{" "}
                 </td>
                 <td>
-                  {product?.sellingPrice && product.inShop
+                  {product?.sellingPrice && product.inShop235
                     ? (
-                        product?.sellingPrice * product.inShop
+                        product?.sellingPrice * product.inShop235
                       ).toLocaleString() + " ETB"
                     : "--"}{" "}
                 </td>
@@ -883,12 +915,20 @@ export default function Shop() {
                       setSellingRowId(product?.id);
                       setOpenSelling(true);
                     }}
-                    disabled={product.inShop === 0 && product.inStore === 0}
+                    disabled={
+                      !selectedShop ||
+                      (product[shopQtyMap[selectedShop]] || 0) === 0
+                    }
                     style={{
                       opacity:
-                        product.inShop === 0 && product.inStore === 0 ? 0.5 : 1,
+                        !selectedShop ||
+                        (product[shopQtyMap[selectedShop]] || 0) === 0
+                          ? 0.5
+                          : 1,
                       cursor:
-                        product.inShop === 0 && product.inStore === 0
+                        product.inShop235 === 0 &&
+                        product.inShop116 === 0 &&
+                        product.inShopSiti === 0
                           ? "not-allowed"
                           : "pointer",
                     }}
@@ -914,11 +954,13 @@ export default function Shop() {
                       setSendingRowId(product?.id);
                       setOpenSending(true);
                     }}
-                    disabled={product.inStore === 0}
+                    disabled={product.inShop116 === 0}
                     style={{
-                      opacity: product.inStore === 0 ? 0.5 : 1,
+                      opacity: product.inShop116 === 0 ? 0.5 : 1,
                       cursor:
-                        product.inShop === 0 && product.inStore === 0
+                        product.inShop235 === 0 &&
+                        product.inShop116 === 0 &&
+                        product.inShopSiti === 0
                           ? "not-allowed"
                           : "pointer",
                     }}
