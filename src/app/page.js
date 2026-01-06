@@ -99,6 +99,7 @@ export default function Home() {
     }
 
     fetchProducts();
+    console.log(role);
   }, []);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -135,8 +136,6 @@ export default function Home() {
     "shop 116": "inShop116",
     "shop siti": "inShopSiti", // make sure this exists in DB
   };
-  console.log(role);
-
   const roleFilteredProducts =
     role === "admin"
       ? filteredProducts
