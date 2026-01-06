@@ -99,7 +99,6 @@ export default function Home() {
     }
 
     fetchProducts();
-    console.log(role);
   }, []);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -136,14 +135,16 @@ export default function Home() {
     "shop 116": "inShop116",
     "shop siti": "inShopSiti", // make sure this exists in DB
   };
-  const roleFilteredProducts =
-    role === "admin"
-      ? filteredProducts
-      : filteredProducts.filter((p) => {
-          const qtyField = shopQtyMap[role];
-          if (!qtyField) return false;
-          return (p[qtyField] || 0) > 0;
-        });
+  console.log(role);
+
+  const roleFilteredProducts = filteredProducts.filter((p) => {
+    const qtyField = shopQtyMap[role];
+
+    // safety check
+    if (!qtyField) return false;
+
+    return (p[qtyField] || 0) > 0;
+  });
 
   const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
   const [added, setAdded] = useState("");
