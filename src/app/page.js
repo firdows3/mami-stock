@@ -138,7 +138,6 @@ export default function Home() {
 
   const [user, setUser] = useState("");
   const [role, setRole] = useState("");
-  console.log(role);
   const roleFilteredProducts =
     role === "admin"
       ? filteredProducts
@@ -147,6 +146,7 @@ export default function Home() {
           if (!qtyField) return false;
           return (p[qtyField] || 0) > 0;
         });
+  console.log(filteredProducts, roleFilteredProducts);
 
   const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
   const [added, setAdded] = useState("");
