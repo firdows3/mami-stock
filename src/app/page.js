@@ -14,6 +14,7 @@ import { Jura } from "next/font/google";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 
 const jura = Jura({
   subsets: ["latin"],
@@ -245,7 +246,8 @@ export default function Home() {
 
   const [user, setUser] = useState("");
   const [role, setRole] = useState("");
-
+  const pathname = usePathname();
+  const router = useRouter();
   useEffect(() => {
     const fetchUser = async () => {
       try {
