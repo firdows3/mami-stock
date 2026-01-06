@@ -135,16 +135,18 @@ export default function Home() {
     "shop 116": "inShop116",
     "shop siti": "inShopSiti", // make sure this exists in DB
   };
+
+  const [user, setUser] = useState("");
+  const [role, setRole] = useState("");
   console.log(role);
-
-  const roleFilteredProducts = filteredProducts.filter((p) => {
-    const qtyField = shopQtyMap[role];
-
-    // safety check
-    if (!qtyField) return false;
-
-    return (p[qtyField] || 0) > 0;
-  });
+  const roleFilteredProducts =
+    role === "admin"
+      ? filteredProducts
+      : filteredProducts.filter((p) => {
+          const qtyField = shopQtyMap[role];
+          if (!qtyField) return false;
+          return (p[qtyField] || 0) > 0;
+        });
 
   const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
   const [added, setAdded] = useState("");
@@ -244,9 +246,6 @@ export default function Home() {
       setLoadingPage(false);
     }
   };
-
-  const [user, setUser] = useState("");
-  const [role, setRole] = useState("");
   const pathname = usePathname();
   const router = useRouter();
   useEffect(() => {
