@@ -135,6 +135,7 @@ export default function Home() {
     "shop 116": "inShop116",
     "shop siti": "inShopSiti", // make sure this exists in DB
   };
+  console.log(role);
 
   const roleFilteredProducts =
     role === "admin"
