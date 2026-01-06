@@ -779,8 +779,9 @@ export default function Shop() {
                     required
                   >
                     <option value="">Select sales source</option>
-                    <option value="shop">Shop</option>
-                    <option value="store">Store</option>
+                    <option value="shop 235">Shop 235</option>
+                    <option value="shop 116">Shop 116</option>
+                    <option value="shop siti">Shop siti</option>
                   </select>
                   <input
                     type="date"

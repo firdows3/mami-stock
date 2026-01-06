@@ -175,18 +175,6 @@ export default function Header() {
               </div> */}
               {/* <Link
                 className={`header-link ${
-                  pathname === "/shop" ? "active-link" : ""
-                }`}
-                href="/shop"
-                onClick={() => {
-                  setOpenProduct(false);
-                  setOpenMenu(false);
-                }}
-              >
-                Shop 235
-              </Link> */}
-              {/* <Link
-                className={`header-link ${
                   pathname === "/store" ? "active-link" : ""
                 }`}
                 href="/store"
@@ -202,6 +190,18 @@ export default function Header() {
 
                 </div>
               )} */}
+              <Link
+                className={`header-link ${
+                  pathname === "/shop" ? "active-link" : ""
+                }`}
+                href="/shop"
+                onClick={() => {
+                  setOpenProduct(false);
+                  setOpenMenu(false);
+                }}
+              >
+                Shop
+              </Link>
               <div className="product-menu">
                 <Link
                   className={`header-link ${

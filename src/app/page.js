@@ -90,6 +90,8 @@ export default function Home() {
       setLoadingPage(true);
       try {
         const response = await axios.get("/api/auth/products");
+        console.log(response);
+
         setAllProducts(response.data);
       } catch (err) {
       } finally {
@@ -146,10 +148,9 @@ export default function Home() {
           if (!qtyField) return false;
           return (p[qtyField] || 0) > 0;
         });
-  console.log(filteredProducts, roleFilteredProducts);
 
   const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
-  const [added, setAdded] = useState("");
+  // const [added, setAdded] = useState("");
   const [bankData, setBankData] = useState([]);
   useEffect(() => {
     setCurrentPage(1);

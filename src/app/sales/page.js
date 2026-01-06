@@ -365,6 +365,7 @@ export default function Home() {
                                   <option value="">Select Sales Source</option>
                                   <option value="shop 235">Shop 235</option>
                                   <option value="shop 116">Shop 116</option>
+                                  <option value="shop siti">Shop Siti</option>
                                 </select>
                               </td>
                               <td>
