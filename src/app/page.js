@@ -136,14 +136,14 @@ export default function Home() {
     "shop siti": "inShopSiti", // make sure this exists in DB
   };
 
-  const roleFilteredProducts = filteredProducts.filter((p) => {
-    const qtyField = shopQtyMap[role];
-
-    // safety check
-    if (!qtyField) return false;
-
-    return (p[qtyField] || 0) > 0;
-  });
+  const roleFilteredProducts =
+    role === "admin"
+      ? filteredProducts
+      : filteredProducts.filter((p) => {
+          const qtyField = shopQtyMap[role];
+          if (!qtyField) return false;
+          return (p[qtyField] || 0) > 0;
+        });
 
   const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
   const [added, setAdded] = useState("");
