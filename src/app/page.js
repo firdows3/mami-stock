@@ -118,7 +118,7 @@ export default function Home() {
     if (selectedShop === "all")
       shopQty = (p.inShop235 || 0) + (p.inShop116 || 0) + (p.inShopSiti || 0);
 
-    return matchesSearch && matchesCategory && shopQty > 0;
+    return matchesSearch && matchesCategory;
   });
 
   const categories = [
