@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./page.module.css";
 import {
   FiCheck,
@@ -90,8 +90,6 @@ export default function Home() {
       setLoadingPage(true);
       try {
         const response = await axios.get("/api/auth/products");
-        console.log(response);
-
         setAllProducts(response.data);
       } catch (err) {
       } finally {
@@ -140,14 +138,16 @@ export default function Home() {
 
   const [user, setUser] = useState("");
   const [role, setRole] = useState("");
-  const roleFilteredProducts =
-    role === "admin"
-      ? filteredProducts
-      : filteredProducts.filter((p) => {
-          const qtyField = shopQtyMap[role];
-          if (!qtyField) return false;
-          return (p[qtyField] || 0) > 0;
-        });
+  const roleFilteredProducts = useMemo(() => {
+    if (!role) return filteredProducts; // 👈 IMPORTANT
+
+    if (role === "admin") return filteredProducts;
+
+    const qtyField = shopQtyMap[role];
+    if (!qtyField) return [];
+
+    return filteredProducts.filter((p) => (p[qtyField] || 0) > 0);
+  }, [filteredProducts, role]);
 
   const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
   // const [added, setAdded] = useState("");
