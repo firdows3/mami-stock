@@ -381,6 +381,7 @@ export default function Shop() {
       productId: "",
       productName: "",
       source: "",
+      destination: "",
       sellingPrice: "",
       buyingPrice: "",
       quantitySent: "",
@@ -397,6 +398,7 @@ export default function Shop() {
           productId: sendingRowId,
           productName: form.productName,
           source: form.source,
+          destination: form.destination,
           sellingPrice: Number(form.sellingPrice),
           buyingPrice: Number(form.buyingPrice),
           quantitySent: Number(form.quantitySent),
@@ -409,6 +411,7 @@ export default function Shop() {
           productId: "",
           productName: "",
           source: "",
+          destination: "",
           sellingPrice: "",
           buyingPrice: "",
           quantitySent: "", // keep default
@@ -1358,6 +1361,23 @@ export default function Shop() {
                       <option value="shopsiti">Shop Siti</option>
                     )}
                   </select>
+                  <select
+                    value={selectedShop}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSendForm((prev) => {
+                        const updated = [...prev];
+                        updated[index].source = value;
+                        return updated;
+                      });
+                    }}
+                    className={styles.categorySelect}
+                  >
+                    <option value="">Select Destination Shop</option>
+                    <option value="shop235">Shop 235</option>
+                    <option value="shop116">Shop 116</option>
+                    <option value="shopsiti">Shop Siti</option>
+                  </select>
 
                   <div
                     style={{ textAlign: "center", color: "red", fontSize: 11 }}
@@ -1405,6 +1425,7 @@ export default function Shop() {
                     productName: "",
                     sellingPrice: "",
                     source: "",
+                    destination: "",
                     buyingPrice: "",
                     quantitySent: "",
                     date: "",
@@ -1434,6 +1455,7 @@ export default function Shop() {
                       <th>Date</th>
                       <th>Qunatity Sent</th>
                       <th>Source Shop</th>
+                      <th>Destination Shop</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1442,6 +1464,7 @@ export default function Shop() {
                         <td>{new Date(sale.date).toLocaleDateString()}</td>
                         <td>{sale.quantitySent.toLocaleString()}</td>
                         <td>{sale.source || "--"}</td>
+                        <td>{sale.destination || "--"}</td>
                       </tr>
                     ))}
                   </tbody>

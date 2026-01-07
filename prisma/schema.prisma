@@ -109,6 +109,7 @@ model SentToShop {
   productId    String?
   productName  String
   source       String?
+  destination  String?
   quantitySent Int
   sellingPrice Float
   buyingPrice  Float

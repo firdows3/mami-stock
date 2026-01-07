@@ -1,6 +1,11 @@
 // import { prisma } from "@/lib/prisma";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+const shopFieldMap = {
+  "shop 235": "inShop235",
+  "shop 116": "inShop116",
+  "shop siti": "inShopSiti",
+};
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -35,19 +40,29 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const {
-      productId,
-      productName,
-      sellingPrice,
-      buyingPrice,
-      quantitySent,
-      source,
-      date,
-    } = body;
+    const { productId, productName, quantitySent, source, destination, date } =
+      body;
 
-    if (!productId || !quantitySent) {
+    if (!productId || !quantitySent || !source || !destination) {
       return NextResponse.json(
         { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    if (source === destination) {
+      return NextResponse.json(
+        { message: "Source and destination cannot be the same" },
+        { status: 400 }
+      );
+    }
+
+    const sourceField = shopFieldMap[source];
+    const destinationField = shopFieldMap[destination];
+
+    if (!sourceField || !destinationField) {
+      return NextResponse.json(
+        { message: "Invalid shop selected" },
         { status: 400 }
       );
     }
@@ -63,54 +78,43 @@ export async function POST(req) {
       );
     }
 
-    if (product.inStore === 0) {
-      return NextResponse.json(
-        { message: "Product is out of stock" },
-        { status: 400 }
-      );
-    }
-    if (Number(quantitySent) > product.inStore) {
+    if (Number(quantitySent) > product[sourceField]) {
       return NextResponse.json(
         {
-          message: `Cannot sell ${quantitySold} items; only ${product.inShop} available in shop.`,
+          message: `Only ${product[sourceField]} items available in ${source}.`,
         },
         { status: 400 }
       );
     }
 
-    // 1. Create purchase record
+    // 1️⃣ Record transfer
     const sendToShop = await prisma.sentToShop.create({
       data: {
         productId,
         productName,
         source,
-        sellingPrice: Number(sellingPrice),
-        buyingPrice: Number(buyingPrice),
+        destination,
         quantitySent: Number(quantitySent),
         date: new Date(date),
       },
     });
 
-    // 2. Update product stock and selling price
+    // 2️⃣ Update stock (atomic)
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
       data: {
-        inStore: {
-          decrement: Number(quantitySent),
-        },
-        inShop: {
-          increment: Number(quantitySent),
-        },
+        [sourceField]: { decrement: Number(quantitySent) },
+        [destinationField]: { increment: Number(quantitySent) },
       },
     });
 
     return NextResponse.json({
-      message: "Success",
+      message: "Stock transferred successfully",
       sendToShop,
       updatedProduct,
     });
   } catch (error) {
-    console.error("Error while Selling:", error);
+    console.error("Error while transferring stock:", error);
     return NextResponse.json(
       { message: "Something went wrong", error },
       { status: 500 }
