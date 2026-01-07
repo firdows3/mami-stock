@@ -114,7 +114,7 @@ export async function POST(req) {
       updatedProduct,
     });
   } catch (error) {
-    console.error("Error while transferring stock:", error);
+    console.log("Error while transferring stock:", error);
     return NextResponse.json(
       { message: "Something went wrong", error },
       { status: 500 }
