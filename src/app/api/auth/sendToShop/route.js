@@ -60,12 +60,12 @@ export async function POST(req) {
     const sourceField = shopFieldMap[source];
     const destinationField = shopFieldMap[destination];
 
-    if (!sourceField || !destinationField) {
-      return NextResponse.json(
-        { message: "Invalid shop selected" },
-        { status: 400 }
-      );
-    }
+    // if (!sourceField || !destinationField) {
+    //   return NextResponse.json(
+    //     { message: "Invalid shop selected" },
+    //     { status: 400 }
+    //   );
+    // }
     console.log(
       body,
       productId,
