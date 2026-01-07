@@ -1011,9 +1011,16 @@ export default function Shop() {
                       setSendingRowId(product?.id);
                       setOpenSending(true);
                     }}
-                    disabled={product.inShop116 === 0}
+                    disabled={
+                      !selectedShop ||
+                      (product[shopQtyMap[selectedShop]] || 0) === 0
+                    }
                     style={{
-                      opacity: product.inShop116 === 0 ? 0.5 : 1,
+                      opacity:
+                        !selectedShop ||
+                        (product[shopQtyMap[selectedShop]] || 0) === 0
+                          ? 0.5
+                          : 1,
                       cursor:
                         product.inShop235 === 0 &&
                         product.inShop116 === 0 &&
