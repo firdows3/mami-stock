@@ -46,6 +46,31 @@ export async function middleware(request) {
       return NextResponse.next();
     }
 
+    if (
+      role === "shop 116" &&
+      (pathname.startsWith("/shop") ||
+        pathname.startsWith("/sales") ||
+        pathname.startsWith("/"))
+    ) {
+      return NextResponse.next();
+    }
+    if (
+      role === "shop 235" &&
+      (pathname.startsWith("/shop") ||
+        pathname.startsWith("/sales") ||
+        pathname.startsWith("/"))
+    ) {
+      return NextResponse.next();
+    }
+    if (
+      role === "shop siti" &&
+      (pathname.startsWith("/shop") ||
+        pathname.startsWith("/sales") ||
+        pathname.startsWith("/"))
+    ) {
+      return NextResponse.next();
+    }
+
     // ❌ Anything else → unauthorized
     return NextResponse.redirect(new URL("/unauthorized", request.url));
   } catch (err) {
