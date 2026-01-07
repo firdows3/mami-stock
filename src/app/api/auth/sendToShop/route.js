@@ -42,7 +42,7 @@ export async function POST(req) {
     const body = await req.json();
     const { productId, productName, quantitySent, source, destination, date } =
       body;
-    console.log(productId, quantitySent, source, destination);
+    console.log(destination);
 
     if (!productId || !quantitySent || !source || !destination) {
       return NextResponse.json(

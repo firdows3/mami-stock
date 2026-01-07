@@ -58,6 +58,8 @@ function downloadSentHistoryPDF(sentHistory) {
   const tableData = sentHistory.map((item) => [
     new Date(item.date).toLocaleDateString(),
     item.quantitySent.toLocaleString(),
+    item.source.toLocaleString(),
+    item.destination.toLocaleString(),
   ]);
 
   autoTable(doc, {
