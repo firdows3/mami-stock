@@ -17,6 +17,7 @@ export default function Home() {
   const [role, setRole] = useState("");
   const [toast, setToast] = useState({ type: "", message: "" });
   const [loadingPage, setLoadingPage] = useState("");
+  const [shopFilter, setShopFilter] = useState("all");
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -182,17 +183,20 @@ export default function Home() {
       ? p.paidWith.some(
           (entry) =>
             typeof entry.method === "string" &&
-            entry.method?.toLowerCase().includes(search.toLowerCase())
+            entry.method.toLowerCase().includes(search.toLowerCase())
         )
       : false;
 
-    return (
-      p.productName.toLowerCase().includes(search.toLowerCase()) ||
-      p.customerName.toLowerCase().includes(search.toLowerCase()) ||
+    const matchesSearch =
+      p.productName?.toLowerCase().includes(search.toLowerCase()) ||
+      p.customerName?.toLowerCase().includes(search.toLowerCase()) ||
       matchesPaidWith ||
-      p.date.includes(search) ||
-      monthYear.toLowerCase().includes(search.toLowerCase())
-    );
+      p.date?.includes(search) ||
+      monthYear.toLowerCase().includes(search.toLowerCase());
+
+    const matchesShop = shopFilter === "all" || p.saleSource === shopFilter;
+
+    return matchesSearch && matchesShop;
   });
 
   function groupSalesByMonthAndDay(sales) {
@@ -242,6 +246,7 @@ export default function Home() {
     setToast({ type, message });
     setTimeout(() => setToast({ type: "", message: "" }), 3000);
   };
+
   return (
     <div className={`${styles.slaesContent} ${jura.className}`}>
       <div className={styles.home_top}>
@@ -255,6 +260,17 @@ export default function Home() {
             onChange={(e) => setSearch(e.target.value)}
             className={styles.searchInput}
           />
+          <select
+            value={shopFilter}
+            onChange={(e) => setShopFilter(e.target.value)}
+            className={styles.categorySelect}
+            style={{ maxWidth: 180 }}
+          >
+            <option value="all">All Shops</option>
+            <option value="shop 235">Shop 235</option>
+            <option value="shop 116">Shop 116</option>
+            <option value="shop siti">Shop Siti</option>
+          </select>
         </div>
       </div>
       {salesData.length === 0 && !loadingPage && (
