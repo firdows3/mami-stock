@@ -138,6 +138,12 @@ export default function Home() {
 
   const [user, setUser] = useState("");
   const [role, setRole] = useState("");
+  const roleToQtyField = {
+    admin: null,
+    "shop 235": "inShop235",
+    "shop 116": "inShop116",
+    "shop siti": "inShopSiti",
+  };
   const roleFilteredProducts = useMemo(() => {
     if (!role) return [];
 
