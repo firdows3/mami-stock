@@ -1226,7 +1226,7 @@ export default function Shop() {
             >
               Close
             </button>
-            {salesHistory.length > 0 && filteredSales.length > 0 && (
+            {salesHistory && salesHistory.length > 0 && (
               <button
                 onClick={() => downloadSalesPDF(salesHistory, selectedSource)}
                 style={{
