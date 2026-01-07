@@ -111,8 +111,8 @@ model SentToShop {
   source       String?
   destination  String?
   quantitySent Int
-  sellingPrice Float
-  buyingPrice  Float
+  // sellingPrice Float
+  // buyingPrice  Float
   date         DateTime
   createdAt    DateTime @default(now())
 

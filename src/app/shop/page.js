@@ -1355,13 +1355,13 @@ export default function Shop() {
                   >
                     <option value="">Select Shop</option>
                     {role !== "shop 235" && (
-                      <option value="shop235">Shop 235</option>
+                      <option value="shop 235">Shop 235</option>
                     )}
                     {role !== "shop 116" && (
-                      <option value="shop116">Shop 116</option>
+                      <option value="shop 116">Shop 116</option>
                     )}
                     {role !== "shop siti" && (
-                      <option value="shopsiti">Shop Siti</option>
+                      <option value="shop siti">Shop Siti</option>
                     )}
                   </select>
                   <select
