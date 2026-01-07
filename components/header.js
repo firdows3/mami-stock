@@ -142,21 +142,32 @@ export default function Header() {
             role === "shop 235" ||
             role === "shop 116" ||
             role === "shop siti") && (
-            <Link
-              className={`header-link ${
-                pathname === "/"
-                  ? // ||
-                    // pathname === "/shop" ||
-                    // pathname === "/store"
-                    "active-link"
-                  : ""
-              }`}
-              href="/"
-              onClick={() => setOpenMenu(false)}
-            >
-              {/* <MdInventory />  */}
-              Product
-            </Link>
+            <>
+              <Link
+                className={`header-link ${
+                  pathname === "/"
+                    ? // ||
+                      // pathname === "/shop" ||
+                      // pathname === "/store"
+                      "active-link"
+                    : ""
+                }`}
+                href="/"
+                onClick={() => setOpenMenu(false)}
+              >
+                {/* <MdInventory />  */}
+                Product
+              </Link>
+              <Link
+                className={`header-link ${
+                  pathname === "/storeSales" ? "active-link" : ""
+                }`}
+                href="/shop"
+                onClick={() => setOpenMenu(false)}
+              >
+                Shop
+              </Link>
+            </>
           )}
           {role === "admin" && (
             <>
@@ -190,7 +201,7 @@ export default function Header() {
 
                 </div>
               )} */}
-              <Link
+              {/* <Link
                 className={`header-link ${
                   pathname === "/shop" ? "active-link" : ""
                 }`}
@@ -201,7 +212,7 @@ export default function Header() {
                 }}
               >
                 Shop
-              </Link>
+              </Link> */}
               <div className="product-menu">
                 <Link
                   className={`header-link ${
@@ -394,7 +405,7 @@ export default function Header() {
           )}
 
           {/* Shopper menu */}
-          {role === "shopper" && (
+          {/* {role === "shopper" && (
             <>
               <Link
                 className={`header-link ${
@@ -403,7 +414,6 @@ export default function Header() {
                 href="/shop"
                 onClick={() => setOpenMenu(false)}
               >
-                {/* <MdStore />  */}
                 Shop
               </Link>
               <Link
@@ -413,14 +423,13 @@ export default function Header() {
                 href="/sales"
                 onClick={() => setOpenMenu(false)}
               >
-                {/* <FaShoppingCart />  */}
                 Sales
               </Link>
             </>
-          )}
+          )} */}
 
           {/* Storekeeper menu */}
-          {role === "storekeeper" && (
+          {/* {role === "storekeeper" && (
             <>
               <Link
                 className={`header-link ${
@@ -429,7 +438,6 @@ export default function Header() {
                 href="/storeSales"
                 onClick={() => setOpenMenu(false)}
               >
-                {/* <FaShoppingCart />  */}
                 Store Sales
               </Link>
               <Link
@@ -439,12 +447,10 @@ export default function Header() {
                 href="/sentToShop"
                 onClick={() => setOpenMenu(false)}
               >
-                {/* <FaShoppingCart /> <HiArrowRight />  */}
                 Send To Shop
               </Link>
             </>
-          )}
-          {/* Logout */}
+          )} */}
           <div
             className="header-link"
             style={{
