@@ -108,6 +108,7 @@ model SentToShop {
   id           String   @id @default(uuid())
   productId    String?
   productName  String
+  source       String?
   quantitySent Int
   sellingPrice Float
   buyingPrice  Float

@@ -380,6 +380,7 @@ export default function Shop() {
     {
       productId: "",
       productName: "",
+      source: "",
       sellingPrice: "",
       buyingPrice: "",
       quantitySent: "",
@@ -395,6 +396,7 @@ export default function Shop() {
         await axios.post("/api/auth/sendToShop", {
           productId: sendingRowId,
           productName: form.productName,
+          source: form.source,
           sellingPrice: Number(form.sellingPrice),
           buyingPrice: Number(form.buyingPrice),
           quantitySent: Number(form.quantitySent),
@@ -406,6 +408,7 @@ export default function Shop() {
         {
           productId: "",
           productName: "",
+          source: "",
           sellingPrice: "",
           buyingPrice: "",
           quantitySent: "", // keep default
@@ -1301,6 +1304,7 @@ export default function Shop() {
                           ...updated[index],
                           productId: selectedProduct?.id,
                           productName: selectedProduct?.productName,
+                          source: selectedProduct?.source,
                           sellingPrice: selectedProduct?.sellingPrice,
                           buyingPrice: selectedProduct?.buyingPrice,
                         };
@@ -1331,6 +1335,30 @@ export default function Shop() {
                     }}
                     required
                   />
+                  <select
+                    value={selectedShop}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSendForm((prev) => {
+                        const updated = [...prev];
+                        updated[index].source = value;
+                        return updated;
+                      });
+                    }}
+                    className={styles.categorySelect}
+                  >
+                    <option value="">Select Shop</option>
+                    {role !== "shop 235" && (
+                      <option value="shop235">Shop 235</option>
+                    )}
+                    {role !== "shop 116" && (
+                      <option value="shop116">Shop 116</option>
+                    )}
+                    {role !== "shop siti" && (
+                      <option value="shopsiti">Shop Siti</option>
+                    )}
+                  </select>
+
                   <div
                     style={{ textAlign: "center", color: "red", fontSize: 11 }}
                   >
@@ -1376,6 +1404,7 @@ export default function Shop() {
                     productId: "",
                     productName: "",
                     sellingPrice: "",
+                    source: "",
                     buyingPrice: "",
                     quantitySent: "",
                     date: "",
@@ -1404,6 +1433,7 @@ export default function Shop() {
                     <tr>
                       <th>Date</th>
                       <th>Qunatity Sent</th>
+                      <th>Source Shop</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1411,6 +1441,7 @@ export default function Shop() {
                       <tr key={sale.id}>
                         <td>{new Date(sale.date).toLocaleDateString()}</td>
                         <td>{sale.quantitySent.toLocaleString()}</td>
+                        <td>{sale.source || "--"}</td>
                       </tr>
                     ))}
                   </tbody>

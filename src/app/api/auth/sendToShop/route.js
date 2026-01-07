@@ -41,6 +41,7 @@ export async function POST(req) {
       sellingPrice,
       buyingPrice,
       quantitySent,
+      source,
       date,
     } = body;
 
@@ -82,6 +83,7 @@ export async function POST(req) {
       data: {
         productId,
         productName,
+        source,
         sellingPrice: Number(sellingPrice),
         buyingPrice: Number(buyingPrice),
         quantitySent: Number(quantitySent),
