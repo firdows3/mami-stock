@@ -109,6 +109,16 @@ export default function Shop() {
   const [toast, setToast] = useState({ type: "", message: "" });
   const [loadingPage, setLoadingPage] = useState(true);
   useEffect(() => {
+    if (role === "shop 116") {
+      setSelectedSource("shop 116");
+    } else if (role === "shop 235") {
+      setSelectedSource("shop 235");
+    } else {
+      setSelectedSource("shop siti");
+    }
+  }, [role]);
+
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await fetch("/api/auth/me");
@@ -606,7 +616,7 @@ export default function Shop() {
                     }}
                     required
                   />
-                  <input
+                  {/* <input
                     type="text"
                     placeholder="Plate Number"
                     value={form.plateNo}
@@ -619,8 +629,8 @@ export default function Shop() {
                       });
                     }}
                     required
-                  />
-                  <input
+                  /> */}
+                  {/* <input
                     type="text"
                     placeholder="Address"
                     value={form.address}
@@ -633,7 +643,7 @@ export default function Shop() {
                       });
                     }}
                     required
-                  />
+                  /> */}
                   <select
                     name="paymentStatus"
                     onChange={(e) => {
@@ -1045,8 +1055,19 @@ export default function Shop() {
             ) : (
               <>
                 <div style={{ marginBottom: "1rem" }}>
-                  <button
-                    onClick={() => setSelectedSource("shop")}
+                  <select
+                    value={selectedShop}
+                    onChange={(e) => setSelectedSource(e.target.value)}
+                    className={styles.categorySelect}
+                  >
+                    <option value="">All Shops</option>
+                    <option value="shop 235">Shop 235</option>
+                    <option value="shop 116">Shop 116</option>
+                    <option value="shop siti">Shop Siti</option>
+                  </select>
+
+                  {/* <button
+                    onClick={() => setSelectedSource("shop ")}
                     style={{
                       marginRight: "0.5rem",
                       backgroundColor:
@@ -1073,7 +1094,7 @@ export default function Shop() {
                     }}
                   >
                     Store Sales
-                  </button>
+                  </button> */}
                 </div>
                 {/* 💾 Filter sales by selectedSource */}
                 {(() => {
