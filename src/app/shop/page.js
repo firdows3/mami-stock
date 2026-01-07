@@ -1129,9 +1129,7 @@ export default function Shop() {
                     0
                   );
 
-                  return filteredSales.length === 0 ? (
-                    <p>{!loadingPage && `No ${selectedSource} sales found.`}</p>
-                  ) : (
+                  return filteredSales.length > 0 ? (
                     <>
                       {role === "admin" && (
                         <p>
@@ -1220,6 +1218,8 @@ export default function Shop() {
                         </tbody>
                       </table>{" "}
                     </>
+                  ) : (
+                    <p>{!loadingPage && `No ${selectedSource} sales found.`}</p>
                   );
                 })()}{" "}
               </>
