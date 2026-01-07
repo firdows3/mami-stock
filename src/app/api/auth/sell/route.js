@@ -45,6 +45,7 @@ export async function POST(req) {
       sellingPrice,
       quantitySold,
       customerName,
+      customerPhone,
       plateNo,
       address,
       paidWith,
@@ -130,6 +131,7 @@ export async function POST(req) {
         sellingPrice: Number(sellingPrice),
         quantitySold: Number(quantitySold),
         customerName,
+        customerPhone,
         plateNo,
         address,
         paidWith,
@@ -153,7 +155,7 @@ Product: ${sell.productName}
 Qty: ${sell.quantitySold}
 Total Price: ${sell.sellingPrice * sell.quantitySold}
 Customer Name: ${sell.customerName}
-Customer Phone: ${sell.sellingPrice}
+Customer Phone: ${sell.customerPhone}
 Customer Adress: ${sell.address}
 Customer Plate Number: ${sell.plateNo}
 Source: ${sell.saleSource}
@@ -210,6 +212,7 @@ export async function PUT(req) {
       sellingPrice,
       quantitySold,
       customerName,
+      customerPhone,
       plateNo,
       address,
       paidWith,
@@ -282,6 +285,7 @@ export async function PUT(req) {
         sellingPrice: Number(sellingPrice),
         quantitySold: Number(quantitySold),
         customerName,
+        customerPhone,
         plateNo,
         address,
         paidWith,

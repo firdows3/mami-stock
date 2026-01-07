@@ -948,7 +948,7 @@ export default function Shop() {
                 {role === "admin" && (
                   <td>
                     <button
-                      className={styles.editButton}
+                      className={styles.cancelButton}
                       onClick={() => fetchSalesHistory(product.id)}
                     >
                       Sales History
@@ -986,7 +986,7 @@ export default function Shop() {
                 {role === "admin" && (
                   <td>
                     <button
-                      className={styles.addButton}
+                      className={styles.editButton}
                       onClick={() => {
                         setOpenSentHistory(true);
                         fetchSentHistory(product?.id);
@@ -998,7 +998,7 @@ export default function Shop() {
                 )}
                 <td>
                   <button
-                    className={styles.sellButton}
+                    className={styles.addButton}
                     onClick={() => {
                       setSendingRowId(product?.id);
                       setOpenSending(true);
@@ -1014,7 +1014,7 @@ export default function Shop() {
                           : "pointer",
                     }}
                   >
-                    Add From Store
+                    Add From Shop
                   </button>
                 </td>
               </tr>
@@ -1220,7 +1220,7 @@ export default function Shop() {
             >
               Close
             </button>
-            {salesHistory.length > 0 && (
+            {salesHistory.length > 0 && filteredSales.length > 0 && (
               <button
                 onClick={() => downloadSalesPDF(salesHistory, selectedSource)}
                 style={{
