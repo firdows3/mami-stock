@@ -1367,7 +1367,7 @@ export default function Shop() {
                       const value = e.target.value;
                       setSendForm((prev) => {
                         const updated = [...prev];
-                        updated[index].source = value;
+                        updated[index].destination = value;
                         return updated;
                       });
                     }}
