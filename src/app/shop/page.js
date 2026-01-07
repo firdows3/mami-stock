@@ -420,7 +420,7 @@ export default function Shop() {
           date: "",
         },
       ]);
-      showToast("succcess", "Successfully sent");
+      showToast("success", "Successfully sent");
       setLoadingPage(true);
       const res = await axios.get("/api/auth/products");
       setAllProducts(res.data);
