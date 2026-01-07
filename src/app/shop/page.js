@@ -1377,9 +1377,9 @@ export default function Shop() {
                     className={styles.categorySelect}
                   >
                     <option value="">Select Destination Shop</option>
-                    <option value="shop235">Shop 235</option>
-                    <option value="shop116">Shop 116</option>
-                    <option value="shopsiti">Shop Siti</option>
+                    <option value="shop 235">Shop 235</option>
+                    <option value="shop 116">Shop 116</option>
+                    <option value="shop siti">Shop Siti</option>
                   </select>
 
                   <div
