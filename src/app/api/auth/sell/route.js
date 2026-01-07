@@ -2,6 +2,11 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { sendTelegramMessage } from "@/lib/telegram";
+const shopFieldMap = {
+  "shop 235": "inShop235",
+  "shop 116": "inShop116",
+  "shop siti": "inShopSiti",
+};
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -73,30 +78,20 @@ export async function POST(req) {
       );
     }
 
-    if (saleSource === "shop 235" && product.inShop === 0) {
+    const stockField = shopFieldMap[saleSource];
+
+    if (!stockField) {
       return NextResponse.json(
-        { message: "Product is out of stock in shop" },
+        { message: "Invalid sale source" },
         { status: 400 }
       );
     }
 
-    if (saleSource === "sshop 116" && product.inStore === 0) {
+    if (Number(quantitySold) > product[stockField]) {
       return NextResponse.json(
-        { message: "Product is out of stock in Shop 116" },
-        { status: 400 }
-      );
-    }
-
-    if (saleSource === "shop 235" && Number(quantitySold) > product.inShop) {
-      return NextResponse.json(
-        { message: `Only ${product.inShop} items available in shop 235.` },
-        { status: 400 }
-      );
-    }
-
-    if (saleSource === "shop 116" && Number(quantitySold) > product.inStore) {
-      return NextResponse.json(
-        { message: `Only ${product.inStore} items available in Shop 116.` },
+        {
+          message: `Only ${product[stockField]} items available in ${saleSource}.`,
+        },
         { status: 400 }
       );
     }
@@ -147,10 +142,9 @@ export async function POST(req) {
     // 2. Update product stock based on saleSource
     const updatedProduct = await prisma.product.update({
       where: { id: productId },
-      data:
-        saleSource === "shop 235"
-          ? { inShop: { decrement: Number(quantitySold) } }
-          : { inStore: { decrement: Number(quantitySold) } }, // store sale
+      data: {
+        [stockField]: { decrement: Number(quantitySold) },
+      },
     });
 
     await sendTelegramMessage(
@@ -168,7 +162,10 @@ ${sell.paymentStatus === "paid" && `Paid With: ${sell.paidWith.method}`}`
     );
 
     // Stock checks
-    const totalStock = updatedProduct.inShop + updatedProduct.inStore;
+    const totalStock =
+      updatedProduct.inShop235 +
+      updatedProduct.inShop116 +
+      updatedProduct.inShopSiti;
 
     if (totalStock <= updatedProduct.minStock) {
       await sendTelegramMessage(
@@ -239,23 +236,23 @@ export async function PUT(req) {
       );
     }
 
-    if (saleSource === "shop 116" && product.inStore === 0) {
+    if (saleSource === "shop 116" && product.inShop116 === 0) {
       return NextResponse.json(
         { message: "Product is out of stock in Shop 116" },
         { status: 400 }
       );
     }
 
-    if (saleSource === "shop 235" && Number(quantitySold) > product.inShop) {
+    if (saleSource === "shop 235" && Number(quantitySold) > product.inShop235) {
       return NextResponse.json(
         { message: `Only ${product.inShop} items available in shop 235.` },
         { status: 400 }
       );
     }
 
-    if (saleSource === "shop 116" && Number(quantitySold) > product.inStore) {
+    if (saleSource === "shop 116" && Number(quantitySold) > product.inShop116) {
       return NextResponse.json(
-        { message: `Only ${product.inStore} items available in Shop 116.` },
+        { message: `Only ${product.inShop116} items available in Shop 116.` },
         { status: 400 }
       );
     }
@@ -299,11 +296,11 @@ export async function PUT(req) {
       where: { id: productId },
       data:
         saleSource === "shop 235"
-          ? { inShop: { decrement: Number(quantitySold) } }
-          : { inStore: { decrement: Number(quantitySold) } },
+          ? { inShop235: { decrement: Number(quantitySold) } }
+          : { inShop116: { decrement: Number(quantitySold) } },
     });
 
-    const totalStock = inShop + inStore;
+    const totalStock = inShop235 + inShop116 + inShopSiti;
 
     if (totalStock <= product.minStock) {
       await sendTelegramMessage(
@@ -347,12 +344,13 @@ export async function DELETE(req) {
     });
 
     // 3. Update product stock (restore based on saleSource)
+    const restoreField = shopFieldMap[sale.saleSource];
+
     await prisma.product.update({
       where: { id: sale.productId },
-      data:
-        sale.saleSource === "shop 235"
-          ? { inShop: { increment: sale.quantitySold } }
-          : { inStore: { increment: sale.quantitySold } },
+      data: {
+        [restoreField]: { increment: sale.quantitySold },
+      },
     });
 
     return NextResponse.json({
