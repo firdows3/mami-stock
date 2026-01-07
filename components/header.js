@@ -160,7 +160,7 @@ export default function Header() {
               </Link>
               <Link
                 className={`header-link ${
-                  pathname === "/storeSales" ? "active-link" : ""
+                  pathname === "/shop" ? "active-link" : ""
                 }`}
                 href="/shop"
                 onClick={() => setOpenMenu(false)}
