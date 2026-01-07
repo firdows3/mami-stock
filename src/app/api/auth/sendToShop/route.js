@@ -42,14 +42,6 @@ export async function POST(req) {
     const body = await req.json();
     const { productId, productName, quantitySent, source, destination, date } =
       body;
-    console.log(
-      body,
-      productId,
-      productName,
-      quantitySent,
-      source,
-      destination
-    );
 
     if (!productId || !quantitySent || !source || !destination) {
       return NextResponse.json(
@@ -74,6 +66,14 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+    console.log(
+      body,
+      productId,
+      productName,
+      quantitySent,
+      source,
+      destination
+    );
 
     const product = await prisma.product.findUnique({
       where: { id: productId },
