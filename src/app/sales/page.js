@@ -285,420 +285,439 @@ export default function Home() {
           No sales yet
         </div>
       )}
-      {Object.entries(groupedSales).map(([month, days]) => (
-        <div key={month} className={styles.salesTable}>
-          <h1 className={styles.pageTitle} style={{ fontSize: 20 }}>
-            Sales - {month}
-          </h1>
+      {groupedSales.length > 0 ? (
+        Object.entries(groupedSales).map(([month, days]) => (
+          <div key={month} className={styles.salesTable}>
+            <h1 className={styles.pageTitle} style={{ fontSize: 20 }}>
+              Sales - {month}
+            </h1>
 
-          {Object.entries(days).map(([day, sales]) => {
-            const total = sales.reduce(
-              (acc, sale) => acc + sale.quantitySold * sale.sellingPrice,
-              0
-            );
+            {Object.entries(days).map(([day, sales]) => {
+              const total = sales.reduce(
+                (acc, sale) => acc + sale.quantitySold * sale.sellingPrice,
+                0
+              );
 
-            let totalCash = 0;
-            let totalBank = 0;
+              let totalCash = 0;
+              let totalBank = 0;
 
-            sales.length > 0 &&
-              sales.forEach((sale) => {
-                sale.paidWith.forEach((payment) => {
-                  const method =
-                    typeof payment.method === "string"
-                      ? payment.method.toLowerCase()
-                      : "";
-                  const amount = Number(payment.amount);
+              sales.length > 0 &&
+                sales.forEach((sale) => {
+                  sale.paidWith.forEach((payment) => {
+                    const method =
+                      typeof payment.method === "string"
+                        ? payment.method.toLowerCase()
+                        : "";
+                    const amount = Number(payment.amount);
 
-                  if (method === "cash") {
-                    totalCash += amount;
-                  } else {
-                    totalBank += amount;
-                  }
+                    if (method === "cash") {
+                      totalCash += amount;
+                    } else {
+                      totalBank += amount;
+                    }
+                  });
                 });
-              });
 
-            return (
-              <div key={sales.id} style={{ marginBottom: "30px" }}>
-                {role === "admin" && (
-                  <h3
-                    style={{
-                      margin: "10px 5px",
-                      fontSize: 14,
-                    }}
-                  >
-                    {day} — Total: {total.toLocaleString()} ETB | Cash:{" "}
-                    {totalCash.toLocaleString()} ETB | Bank:{" "}
-                    {totalBank.toLocaleString()} ETB
-                  </h3>
-                )}
-                <div className={styles.tableContainer}>
-                  <table className={styles.productTable}>
-                    <thead>
-                      <tr>
-                        <th>Product Name</th>
-                        <th>Quantity Sold</th>
-                        <th>Sales Source</th>
-                        <th>Selling Price</th>
-                        <th>Paid With</th>
-                        <th>Customer Name</th>
-                        <th>Plate Number</th>
-                        <th>Address</th>
-                        <th>Payment Status</th>
-                        {role === "admin" && <th>Total</th>}
-                        <th>Date</th>
-                        {role === "admin" && <th></th>}
-                        {role === "admin" && <th></th>}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sales.map((sale) => (
-                        <tr key={sale.id}>
-                          {editSalesId === sale.id ? (
-                            <>
-                              <td>
-                                <input
-                                  type="text"
-                                  name="productName"
-                                  value={editSalesData.productName}
-                                  onChange={handleEditChange}
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="number"
-                                  name="quantitySold"
-                                  value={editSalesData.quantitySold}
-                                  onChange={handleEditChange}
-                                />
-                              </td>
-                              <td>
-                                <select
-                                  name="paymentStatus"
-                                  onChange={handleEditChange}
-                                  value={editSalesData.saleSource}
-                                  required
-                                >
-                                  <option value="">Select Sales Source</option>
-                                  <option value="shop 235">Shop 235</option>
-                                  <option value="shop 116">Shop 116</option>
-                                  <option value="shop siti">Shop Siti</option>
-                                </select>
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  name="sellingPrice"
-                                  value={editSalesData.sellingPrice}
-                                  onChange={handleEditChange}
-                                />
-                              </td>
-                              <td style={{ width: 300 }}>
-                                {editSalesData.paidWith?.length > 0 &&
-                                  editSalesData.paidWith.map(
-                                    (payment, index) => {
-                                      const expectedAmount =
-                                        Number(editSalesData.quantitySold) *
-                                        Number(editSalesData.sellingPrice);
-
-                                      const additionalPaidSum =
-                                        editSalesData.paidWith
-                                          .slice(1)
-                                          .reduce(
-                                            (acc, p) =>
-                                              acc + Number(p.amount || 0),
-                                            0
-                                          );
-
-                                      const firstAmount =
-                                        index === 0
-                                          ? expectedAmount - additionalPaidSum
-                                          : payment.amount;
-
-                                      // If this is the first payment row, update state so it's stored correctly
-                                      if (
-                                        index === 0 &&
-                                        payment.amount !== firstAmount
-                                      ) {
-                                        const updated = [
-                                          ...editSalesData.paidWith,
-                                        ];
-                                        updated[0] = {
-                                          ...updated[0],
-                                          amount: firstAmount,
-                                        };
-                                        setEditSalesData((prev) => ({
-                                          ...prev,
-                                          paidWith: updated,
-                                        }));
-                                      }
-
-                                      return (
-                                        <div
-                                          key={index}
-                                          style={{
-                                            display: "flex",
-                                            gap: "5px",
-                                            marginBottom: "5px",
-                                          }}
-                                        >
-                                          <input
-                                            type="text"
-                                            placeholder="Method"
-                                            value={payment.method}
-                                            onChange={(e) =>
-                                              handlePaidWithChange(
-                                                index,
-                                                "method",
-                                                e.target.value
-                                              )
-                                            }
-                                          />
-
-                                          {index === 0 &&
-                                          editSalesData.paymentStatus ===
-                                            "paid" ? (
-                                            // Fixed display for first amount
-                                            <div
-                                              style={{
-                                                padding: "0 10px",
-                                                lineHeight: "32px",
-                                                border: "1px solid #ccc",
-                                                borderRadius: 4,
-                                                minWidth: 100,
-                                              }}
-                                            >
-                                              {firstAmount.toLocaleString()} ETB
-                                            </div>
-                                          ) : (
-                                            // Editable input for other amounts
-                                            <input
-                                              type="number"
-                                              placeholder="Amount"
-                                              min={0}
-                                              max={expectedAmount}
-                                              value={payment.amount}
-                                              onChange={(e) => {
-                                                let value = Number(
-                                                  e.target.value
-                                                );
-                                                if (value < 0) value = 0;
-                                                if (value > expectedAmount)
-                                                  value = expectedAmount;
-
-                                                const updated = [
-                                                  ...editSalesData.paidWith,
-                                                ];
-                                                updated[index] = {
-                                                  ...updated[index],
-                                                  amount: value,
-                                                };
-
-                                                // Recalculate first row amount when others change
-                                                const newAdditionalSum = updated
-                                                  .slice(1)
-                                                  .reduce(
-                                                    (acc, p) =>
-                                                      acc +
-                                                      Number(p.amount || 0),
-                                                    0
-                                                  );
-                                                updated[0] = {
-                                                  ...updated[0],
-                                                  amount:
-                                                    expectedAmount -
-                                                    newAdditionalSum,
-                                                };
-
-                                                setEditSalesData({
-                                                  ...editSalesData,
-                                                  paidWith: updated,
-                                                });
-                                              }}
-                                              required
-                                            />
-                                          )}
-
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              removePaidWithRow(index)
-                                            }
-                                          >
-                                            X
-                                          </button>
-                                        </div>
-                                      );
-                                    }
-                                  )}
-                                <button type="button" onClick={addPaidWithRow}>
-                                  + Add Payment Method
-                                </button>
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  name="customerName"
-                                  value={editSalesData.customerName}
-                                  onChange={handleEditChange}
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  name="plateNo"
-                                  value={editSalesData.plateNo}
-                                  onChange={handleEditChange}
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  name="address"
-                                  value={editSalesData.address}
-                                  onChange={handleEditChange}
-                                />
-                              </td>
-                              <td>
-                                <select
-                                  name="paymentStatus"
-                                  onChange={handleEditChange}
-                                  value={editSalesData.paymentStatus}
-                                  required
-                                >
-                                  <option value="">
-                                    Select payment status
-                                  </option>
-                                  <option value="paid">Paid</option>
-                                  <option value="credit">Credit</option>
-                                  <option value="partial">Partial</option>
-                                </select>
-                              </td>
-                              {role === "admin" && (
+              return (
+                <div key={sales.id} style={{ marginBottom: "30px" }}>
+                  {role === "admin" && (
+                    <h3
+                      style={{
+                        margin: "10px 5px",
+                        fontSize: 14,
+                      }}
+                    >
+                      {day} — Total: {total.toLocaleString()} ETB | Cash:{" "}
+                      {totalCash.toLocaleString()} ETB | Bank:{" "}
+                      {totalBank.toLocaleString()} ETB
+                    </h3>
+                  )}
+                  <div className={styles.tableContainer}>
+                    <table className={styles.productTable}>
+                      <thead>
+                        <tr>
+                          <th>Product Name</th>
+                          <th>Quantity Sold</th>
+                          <th>Sales Source</th>
+                          <th>Selling Price</th>
+                          <th>Paid With</th>
+                          <th>Customer Name</th>
+                          <th>Plate Number</th>
+                          <th>Address</th>
+                          <th>Payment Status</th>
+                          {role === "admin" && <th>Total</th>}
+                          <th>Date</th>
+                          {role === "admin" && <th></th>}
+                          {role === "admin" && <th></th>}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sales.map((sale) => (
+                          <tr key={sale.id}>
+                            {editSalesId === sale.id ? (
+                              <>
                                 <td>
-                                  {(
-                                    sale.quantitySold * sale.sellingPrice
-                                  ).toLocaleString()}{" "}
-                                  ETB
+                                  <input
+                                    type="text"
+                                    name="productName"
+                                    value={editSalesData.productName}
+                                    onChange={handleEditChange}
+                                  />
                                 </td>
-                              )}
-                              <td>
-                                {new Date(sale.createdAt).toLocaleDateString()}
-                              </td>
-                              <td>
-                                <button
-                                  onClick={() => handleEditSubmit(sale.id)}
-                                >
-                                  Save
-                                </button>
-                                <button onClick={handleCancelEdit}>
-                                  Cancel
-                                </button>
-                              </td>
-                              <td></td>
-                            </>
-                          ) : (
-                            <>
-                              {" "}
-                              <td>{sale.productName || "--"}</td>
-                              <td>
-                                {sale.quantitySold?.toLocaleString() || "--"}
-                              </td>
-                              <td>
-                                {sale.saleSource?.toLocaleString() || "--"}
-                              </td>
-                              <td>
-                                {sale.sellingPrice?.toLocaleString()}{" "}
-                                {sale.sellingPrice ? "ETB" : "--"}
-                              </td>
-                              {sale.paymentStatus === "paid" ||
-                              sale.paymentStatus === "partial" ? (
-                                <td style={{ width: "250px" }}>
-                                  {Array.isArray(sale.paidWith) ? (
-                                    sale.paidWith?.length > 0 &&
-                                    sale.paidWith.map((p, i) => (
-                                      <div key={i}>
-                                        {p.method !== "" && (
+                                <td>
+                                  <input
+                                    type="number"
+                                    name="quantitySold"
+                                    value={editSalesData.quantitySold}
+                                    onChange={handleEditChange}
+                                  />
+                                </td>
+                                <td>
+                                  <select
+                                    name="paymentStatus"
+                                    onChange={handleEditChange}
+                                    value={editSalesData.saleSource}
+                                    required
+                                  >
+                                    <option value="">
+                                      Select Sales Source
+                                    </option>
+                                    <option value="shop 235">Shop 235</option>
+                                    <option value="shop 116">Shop 116</option>
+                                    <option value="shop siti">Shop Siti</option>
+                                  </select>
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    name="sellingPrice"
+                                    value={editSalesData.sellingPrice}
+                                    onChange={handleEditChange}
+                                  />
+                                </td>
+                                <td style={{ width: 300 }}>
+                                  {editSalesData.paidWith?.length > 0 &&
+                                    editSalesData.paidWith.map(
+                                      (payment, index) => {
+                                        const expectedAmount =
+                                          Number(editSalesData.quantitySold) *
+                                          Number(editSalesData.sellingPrice);
+
+                                        const additionalPaidSum =
+                                          editSalesData.paidWith
+                                            .slice(1)
+                                            .reduce(
+                                              (acc, p) =>
+                                                acc + Number(p.amount || 0),
+                                              0
+                                            );
+
+                                        const firstAmount =
+                                          index === 0
+                                            ? expectedAmount - additionalPaidSum
+                                            : payment.amount;
+
+                                        // If this is the first payment row, update state so it's stored correctly
+                                        if (
+                                          index === 0 &&
+                                          payment.amount !== firstAmount
+                                        ) {
+                                          const updated = [
+                                            ...editSalesData.paidWith,
+                                          ];
+                                          updated[0] = {
+                                            ...updated[0],
+                                            amount: firstAmount,
+                                          };
+                                          setEditSalesData((prev) => ({
+                                            ...prev,
+                                            paidWith: updated,
+                                          }));
+                                        }
+
+                                        return (
                                           <div
-                                            key={i}
+                                            key={index}
                                             style={{
-                                              paddingBottom: 10,
-                                              borderBottom:
-                                                "1px solid rgba(112, 112, 112, 0.5)",
+                                              display: "flex",
+                                              gap: "5px",
+                                              marginBottom: "5px",
                                             }}
                                           >
-                                            <strong>{String(p.method)}:</strong>{" "}
-                                            {Number(
-                                              p.amount || 0
-                                            ).toLocaleString()}{" "}
-                                            ETB
+                                            <input
+                                              type="text"
+                                              placeholder="Method"
+                                              value={payment.method}
+                                              onChange={(e) =>
+                                                handlePaidWithChange(
+                                                  index,
+                                                  "method",
+                                                  e.target.value
+                                                )
+                                              }
+                                            />
+
+                                            {index === 0 &&
+                                            editSalesData.paymentStatus ===
+                                              "paid" ? (
+                                              // Fixed display for first amount
+                                              <div
+                                                style={{
+                                                  padding: "0 10px",
+                                                  lineHeight: "32px",
+                                                  border: "1px solid #ccc",
+                                                  borderRadius: 4,
+                                                  minWidth: 100,
+                                                }}
+                                              >
+                                                {firstAmount.toLocaleString()}{" "}
+                                                ETB
+                                              </div>
+                                            ) : (
+                                              // Editable input for other amounts
+                                              <input
+                                                type="number"
+                                                placeholder="Amount"
+                                                min={0}
+                                                max={expectedAmount}
+                                                value={payment.amount}
+                                                onChange={(e) => {
+                                                  let value = Number(
+                                                    e.target.value
+                                                  );
+                                                  if (value < 0) value = 0;
+                                                  if (value > expectedAmount)
+                                                    value = expectedAmount;
+
+                                                  const updated = [
+                                                    ...editSalesData.paidWith,
+                                                  ];
+                                                  updated[index] = {
+                                                    ...updated[index],
+                                                    amount: value,
+                                                  };
+
+                                                  // Recalculate first row amount when others change
+                                                  const newAdditionalSum =
+                                                    updated
+                                                      .slice(1)
+                                                      .reduce(
+                                                        (acc, p) =>
+                                                          acc +
+                                                          Number(p.amount || 0),
+                                                        0
+                                                      );
+                                                  updated[0] = {
+                                                    ...updated[0],
+                                                    amount:
+                                                      expectedAmount -
+                                                      newAdditionalSum,
+                                                  };
+
+                                                  setEditSalesData({
+                                                    ...editSalesData,
+                                                    paidWith: updated,
+                                                  });
+                                                }}
+                                                required
+                                              />
+                                            )}
+
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                removePaidWithRow(index)
+                                              }
+                                            >
+                                              X
+                                            </button>
                                           </div>
-                                        )}
-                                      </div>
-                                    ))
-                                  ) : (
-                                    <span>--</span>
-                                  )}
-                                </td>
-                              ) : (
-                                <td>--</td>
-                              )}
-                              <td>{sale.customerName || "--"}</td>
-                              <td>{sale.plateNo || "--"}</td>
-                              <td>{sale.address || "--"}</td>
-                              <td
-                                style={{
-                                  color:
-                                    sale.paymentStatus === "credit" ||
-                                    sale.paymentStatus === "partial"
-                                      ? "red"
-                                      : "black",
-                                }}
-                              >
-                                {sale.paymentStatus || "--"}
-                              </td>
-                              {role === "admin" && (
-                                <td>
-                                  {(
-                                    sale.quantitySold * sale.sellingPrice
-                                  ).toLocaleString()}{" "}
-                                  ETB
-                                </td>
-                              )}
-                              <td>
-                                {new Date(sale.createdAt).toLocaleDateString()}
-                              </td>
-                              {role === "admin" && (
-                                <td>
+                                        );
+                                      }
+                                    )}
                                   <button
-                                    className={styles.editButton}
-                                    onClick={() => handleEditClick(sale)}
+                                    type="button"
+                                    onClick={addPaidWithRow}
                                   >
-                                    Edit
+                                    + Add Payment Method
                                   </button>
                                 </td>
-                              )}
-                              {role === "admin" && (
+                                <td>
+                                  <input
+                                    type="text"
+                                    name="customerName"
+                                    value={editSalesData.customerName}
+                                    onChange={handleEditChange}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    name="plateNo"
+                                    value={editSalesData.plateNo}
+                                    onChange={handleEditChange}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="text"
+                                    name="address"
+                                    value={editSalesData.address}
+                                    onChange={handleEditChange}
+                                  />
+                                </td>
+                                <td>
+                                  <select
+                                    name="paymentStatus"
+                                    onChange={handleEditChange}
+                                    value={editSalesData.paymentStatus}
+                                    required
+                                  >
+                                    <option value="">
+                                      Select payment status
+                                    </option>
+                                    <option value="paid">Paid</option>
+                                    <option value="credit">Credit</option>
+                                    <option value="partial">Partial</option>
+                                  </select>
+                                </td>
+                                {role === "admin" && (
+                                  <td>
+                                    {(
+                                      sale.quantitySold * sale.sellingPrice
+                                    ).toLocaleString()}{" "}
+                                    ETB
+                                  </td>
+                                )}
+                                <td>
+                                  {new Date(
+                                    sale.createdAt
+                                  ).toLocaleDateString()}
+                                </td>
                                 <td>
                                   <button
-                                    className={styles.deleteButton}
-                                    onClick={() => handleDeleteClick(sale)}
+                                    onClick={() => handleEditSubmit(sale.id)}
                                   >
-                                    Delete
+                                    Save
+                                  </button>
+                                  <button onClick={handleCancelEdit}>
+                                    Cancel
                                   </button>
                                 </td>
-                              )}
-                            </>
-                          )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                                <td></td>
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                <td>{sale.productName || "--"}</td>
+                                <td>
+                                  {sale.quantitySold?.toLocaleString() || "--"}
+                                </td>
+                                <td>
+                                  {sale.saleSource?.toLocaleString() || "--"}
+                                </td>
+                                <td>
+                                  {sale.sellingPrice?.toLocaleString()}{" "}
+                                  {sale.sellingPrice ? "ETB" : "--"}
+                                </td>
+                                {sale.paymentStatus === "paid" ||
+                                sale.paymentStatus === "partial" ? (
+                                  <td style={{ width: "250px" }}>
+                                    {Array.isArray(sale.paidWith) ? (
+                                      sale.paidWith?.length > 0 &&
+                                      sale.paidWith.map((p, i) => (
+                                        <div key={i}>
+                                          {p.method !== "" && (
+                                            <div
+                                              key={i}
+                                              style={{
+                                                paddingBottom: 10,
+                                                borderBottom:
+                                                  "1px solid rgba(112, 112, 112, 0.5)",
+                                              }}
+                                            >
+                                              <strong>
+                                                {String(p.method)}:
+                                              </strong>{" "}
+                                              {Number(
+                                                p.amount || 0
+                                              ).toLocaleString()}{" "}
+                                              ETB
+                                            </div>
+                                          )}
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <span>--</span>
+                                    )}
+                                  </td>
+                                ) : (
+                                  <td>--</td>
+                                )}
+                                <td>{sale.customerName || "--"}</td>
+                                <td>{sale.plateNo || "--"}</td>
+                                <td>{sale.address || "--"}</td>
+                                <td
+                                  style={{
+                                    color:
+                                      sale.paymentStatus === "credit" ||
+                                      sale.paymentStatus === "partial"
+                                        ? "red"
+                                        : "black",
+                                  }}
+                                >
+                                  {sale.paymentStatus || "--"}
+                                </td>
+                                {role === "admin" && (
+                                  <td>
+                                    {(
+                                      sale.quantitySold * sale.sellingPrice
+                                    ).toLocaleString()}{" "}
+                                    ETB
+                                  </td>
+                                )}
+                                <td>
+                                  {new Date(
+                                    sale.createdAt
+                                  ).toLocaleDateString()}
+                                </td>
+                                {role === "admin" && (
+                                  <td>
+                                    <button
+                                      className={styles.editButton}
+                                      onClick={() => handleEditClick(sale)}
+                                    >
+                                      Edit
+                                    </button>
+                                  </td>
+                                )}
+                                {role === "admin" && (
+                                  <td>
+                                    <button
+                                      className={styles.deleteButton}
+                                      onClick={() => handleDeleteClick(sale)}
+                                    >
+                                      Delete
+                                    </button>
+                                  </td>
+                                )}
+                              </>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        ))
+      ) : (
+        <div style={{ fontSize: 20, textAlign: "center", margin: 10 }}>
+          There is no sales in {shopFilter}
         </div>
-      ))}
+      )}
       {showDeleteModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>

@@ -1342,7 +1342,7 @@ export default function Shop() {
                     required
                   />
                   <select
-                    value={selectedShop}
+                    // value={selectedShop}
                     onChange={(e) => {
                       const value = e.target.value;
                       setSendForm((prev) => {
@@ -1365,7 +1365,7 @@ export default function Shop() {
                     )}
                   </select>
                   <select
-                    value={selectedShop}
+                    // value={selectedShop}
                     onChange={(e) => {
                       const value = e.target.value;
                       setSendForm((prev) => {
