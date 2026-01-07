@@ -285,7 +285,7 @@ export default function Home() {
           No sales yet
         </div>
       )}
-      {groupedSales.length > 0 ? (
+      {groupedSales ? (
         Object.entries(groupedSales).map(([month, days]) => (
           <div key={month} className={styles.salesTable}>
             <h1 className={styles.pageTitle} style={{ fontSize: 20 }}>
