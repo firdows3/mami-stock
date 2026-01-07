@@ -898,9 +898,9 @@ export default function Shop() {
               <th>Selling Price</th>
               <th>Total</th>
               <th>Date</th>
+              {role === "admin" && <th></th>}
               <th></th>
-              <th></th>
-              <th></th>
+              {role === "admin" && <th></th>}
               <th></th>
             </tr>
           </thead>
@@ -941,14 +941,16 @@ export default function Shop() {
                     : "--"}
                 </td>
                 <td>{new Date(product.createdAt).toLocaleDateString()}</td>
-                <td>
-                  <button
-                    className={styles.editButton}
-                    onClick={() => fetchSalesHistory(product.id)}
-                  >
-                    Sales History
-                  </button>
-                </td>
+                {role === "admin" && (
+                  <td>
+                    <button
+                      className={styles.editButton}
+                      onClick={() => fetchSalesHistory(product.id)}
+                    >
+                      Sales History
+                    </button>
+                  </td>
+                )}
                 <td>
                   <button
                     className={styles.sellButton}
@@ -977,17 +979,19 @@ export default function Shop() {
                     Sell
                   </button>
                 </td>
-                <td>
-                  <button
-                    className={styles.addButton}
-                    onClick={() => {
-                      setOpenSentHistory(true);
-                      fetchSentHistory(product?.id);
-                    }}
-                  >
-                    Added History
-                  </button>
-                </td>
+                {role === "admin" && (
+                  <td>
+                    <button
+                      className={styles.addButton}
+                      onClick={() => {
+                        setOpenSentHistory(true);
+                        fetchSentHistory(product?.id);
+                      }}
+                    >
+                      Added History
+                    </button>
+                  </td>
+                )}
                 <td>
                   <button
                     className={styles.sellButton}
