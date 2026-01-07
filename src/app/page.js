@@ -139,14 +139,16 @@ export default function Home() {
   const [user, setUser] = useState("");
   const [role, setRole] = useState("");
   const roleFilteredProducts = useMemo(() => {
-    if (!role) return filteredProducts; // 👈 IMPORTANT
+    if (!role) return [];
 
+    // admin sees everything
     if (role === "admin") return filteredProducts;
 
-    const qtyField = shopQtyMap[role];
+    const qtyField = roleToQtyField[role];
     if (!qtyField) return [];
 
-    return filteredProducts.filter((p) => (p[qtyField] || 0) > 0);
+    // shop users see only their shop items
+    return filteredProducts.filter((p) => Number(p[qtyField] || 0) > 0);
   }, [filteredProducts, role]);
 
   const paginatedProducts = roleFilteredProducts.slice(startIndex, endIndex);
@@ -414,8 +416,8 @@ export default function Home() {
         >
           <select
             value={selectedShop}
+            disabled={role !== "admin"}
             onChange={(e) => setSelectedShop(e.target.value)}
-            className={styles.categorySelect}
           >
             <option value="all">All Shops</option>
             <option value="shop235">Shop 235</option>
@@ -1363,20 +1365,17 @@ export default function Home() {
                   </td>
 
                   {/* Total Buying Price */}
-                  {role === "admin" && (
-                    <td>
-                      {product.inShop235 &&
-                      product.inShop116 &&
-                      product.inShopSiti
-                        ? (
-                            (product.inShop235 +
-                              product.inShop116 +
-                              product.inShopSiti) *
-                            product.buyingPrice
-                          ).toLocaleString() + " ETB"
-                        : "--"}
-                    </td>
-                  )}
+                  <td>
+                    {role === "admin" &&
+                      (product.inShop235 || 0) +
+                        (product.inShop116 || 0) +
+                        (product.inShopSiti || 0)}
+
+                    {role === "shop 235" && product.inShop235}
+                    {role === "shop 116" && product.inShop116}
+                    {role === "shop siti" && product.inShopSiti}
+                  </td>
+
                   {/* Total Selling Price */}
                   {role === "admin" && (
                     <td>
@@ -1421,10 +1420,10 @@ export default function Home() {
           <button
             onClick={() =>
               setCurrentPage((prev) =>
-                endIndex < filteredProducts.length ? prev + 1 : prev
+                endIndex < roleFilteredProducts.length ? prev + 1 : prev
               )
             }
-            disabled={endIndex >= filteredProducts.length}
+            disabled={endIndex >= roleFilteredProducts.length}
           >
             <FiChevronRight />
           </button>
