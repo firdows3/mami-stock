@@ -1308,6 +1308,7 @@ export default function Shop() {
                           productId: selectedProduct?.id,
                           productName: selectedProduct?.productName,
                           source: selectedProduct?.source,
+                          destination: selectedProduct?.destination,
                           sellingPrice: selectedProduct?.sellingPrice,
                           buyingPrice: selectedProduct?.buyingPrice,
                         };
