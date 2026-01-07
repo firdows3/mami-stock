@@ -175,10 +175,18 @@ export default function Shop() {
       .toLowerCase()
       .includes(search.toLowerCase());
 
-    if (!selectedShop) return matchesSearch;
+    if (!matchesSearch) return false;
 
+    // ADMIN: show all products
+    if (role === "admin") {
+      if (!selectedShop) return true;
+      const qtyField = shopQtyMap[selectedShop];
+      return (p[qtyField] || 0) > 0;
+    }
+
+    // SHOP USERS: only their shop
     const qtyField = shopQtyMap[selectedShop];
-    return matchesSearch && (p[qtyField] || 0) > 0;
+    return (p[qtyField] || 0) > 0;
   });
 
   const [rowsToShow, setRowsToShow] = useState(20);
@@ -441,6 +449,11 @@ export default function Shop() {
     setToast({ type, message });
     setTimeout(() => setToast({ type: "", message: "" }), 3000);
   };
+  useEffect(() => {
+    if (role === "shop 235") setSelectedShop("shop235");
+    if (role === "shop 116") setSelectedShop("shop116");
+    if (role === "shop siti") setSelectedShop("shopsiti");
+  }, [role]);
 
   return (
     <div className={`${styles.mainContent} ${jura.className}`}>
@@ -451,6 +464,7 @@ export default function Shop() {
             value={selectedShop}
             onChange={(e) => setSelectedShop(e.target.value)}
             className={styles.categorySelect}
+            disabled={role !== "admin"}
           >
             <option value="">Select Shop</option>
             <option value="shop235">Shop 235</option>
@@ -885,20 +899,36 @@ export default function Shop() {
               <tr key={product.id}>
                 <td>{product.productName ? product?.productName : "--"}</td>
                 <td>
-                  {selectedShop &&
-                    product[shopQtyMap[selectedShop]]?.toLocaleString()}
+                  {role === "admin"
+                    ? selectedShop
+                      ? product[shopQtyMap[selectedShop]]?.toLocaleString()
+                      : (
+                          (product.inShop235 || 0) +
+                          (product.inShop116 || 0) +
+                          (product.inShopSiti || 0)
+                        ).toLocaleString()
+                    : product[shopQtyMap[selectedShop]]?.toLocaleString()}
                 </td>
+
                 <td>
                   {product.sellingPrice
                     ? product?.sellingPrice.toLocaleString() + " ETB"
                     : "--"}{" "}
                 </td>
                 <td>
-                  {product?.sellingPrice && product.inShop235
-                    ? (
-                        product?.sellingPrice * product.inShop235
-                      ).toLocaleString() + " ETB"
-                    : "--"}{" "}
+                  {product.sellingPrice
+                    ? role === "admin" && !selectedShop
+                      ? (
+                          product.sellingPrice *
+                          ((product.inShop235 || 0) +
+                            (product.inShop116 || 0) +
+                            (product.inShopSiti || 0))
+                        ).toLocaleString() + " ETB"
+                      : (
+                          product.sellingPrice *
+                          (product[shopQtyMap[selectedShop]] || 0)
+                        ).toLocaleString() + " ETB"
+                    : "--"}
                 </td>
                 <td>{new Date(product.createdAt).toLocaleDateString()}</td>
                 <td>
