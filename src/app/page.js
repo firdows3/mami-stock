@@ -418,6 +418,7 @@ export default function Home() {
             value={selectedShop}
             disabled={role !== "admin"}
             onChange={(e) => setSelectedShop(e.target.value)}
+            className={styles.categorySelect}
           >
             <option value="all">All Shops</option>
             <option value="shop235">Shop 235</option>
@@ -1352,30 +1353,39 @@ export default function Home() {
                   )}
 
                   <td>
-                    {selectedShop === "shop235" ||
-                      (role === "shop 235" && product.inShop235)}
-                    {selectedShop === "shop116" ||
-                      (role === "shop 116" && product.inShop116)}
-                    {selectedShop === "shopsiti" ||
-                      (role === "shop siti" && product.inShopSiti)}
-                    {selectedShop === "all" &&
-                      product.inShop235 +
-                        product.inShop116 +
-                        (product.inShopSiti || 0)}
-                  </td>
-
-                  {/* Total Buying Price */}
-                  <td>
+                    {/* ADMIN */}
                     {role === "admin" &&
-                      (product.inShop235 || 0) +
-                        (product.inShop116 || 0) +
-                        (product.inShopSiti || 0)}
+                      (selectedShop === "shop235"
+                        ? product.inShop235 || 0
+                        : selectedShop === "shop116"
+                        ? product.inShop116 || 0
+                        : selectedShop === "shopsiti"
+                        ? product.inShopSiti || 0
+                        : (product.inShop235 || 0) +
+                          (product.inShop116 || 0) +
+                          (product.inShopSiti || 0))}
 
+                    {/* SHOP USERS */}
                     {role === "shop 235" && product.inShop235}
                     {role === "shop 116" && product.inShop116}
                     {role === "shop siti" && product.inShopSiti}
                   </td>
 
+                  {/* Total Buying Price */}
+                  {role === "admin" && (
+                    <td>
+                      {product.inShop235 &&
+                      product.inShop116 &&
+                      product.inShopSiti
+                        ? (
+                            (product.inShop235 +
+                              product.inShop116 +
+                              product.inShopSiti) *
+                            product.buyingPrice
+                          ).toLocaleString() + " ETB"
+                        : "--"}
+                    </td>
+                  )}
                   {/* Total Selling Price */}
                   {role === "admin" && (
                     <td>
