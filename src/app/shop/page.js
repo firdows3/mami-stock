@@ -464,6 +464,7 @@ export default function Shop() {
     if (role === "shop 116") setSelectedShop("shop116");
     if (role === "shop siti") setSelectedShop("shopsiti");
   }, [role]);
+  const selectedProduct = allProducts.find((p) => p.id === sellingRowId);
 
   return (
     <div className={`${styles.mainContent} ${jura.className}`}>
@@ -528,8 +529,11 @@ export default function Shop() {
                     </p>
                   </div>
                   <td>
-                    {selectedShop &&
-                      product[shopQtyMap[selectedShop]]?.toLocaleString()}
+                    {selectedProduct && selectedShop
+                      ? selectedProduct[
+                          shopQtyMap[selectedShop]
+                        ]?.toLocaleString()
+                      : "--"}
                   </td>
                 </div>
               </div>
