@@ -195,7 +195,7 @@ ${sell.paymentStatus === "paid" && `Paid With: ${sell.paidWith.method}`}`
       bankTransaction,
     });
   } catch (error) {
-    console.error("Error while Selling:", error);
+    console.log("Error while Selling:", error);
     return NextResponse.json(
       { message: "Something went wrong", error },
       { status: 500 }
@@ -360,7 +360,7 @@ export async function DELETE(req) {
       message: "Sale deleted and stock restored",
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 }
